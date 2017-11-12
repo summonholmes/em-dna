@@ -1,7 +1,7 @@
 # em-algorithm-python
 Demonstration of the Expectation Maximization (EM) algorithm to compare two FASTA sequences
 
-Prerequisite:
+Dependencies:  
 Python 3  
 python-biopython  
 python-pprint  
