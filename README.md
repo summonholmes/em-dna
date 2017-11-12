@@ -3,10 +3,8 @@ Demonstration of the Expectation Maximization (EM) algorithm to compare two FAST
 
 Prerequisite:
 Python 3  
-python-biopython
-python-pprint
-
-
+python-biopython  
+python-pprint  
 
 Usage:
 ===
