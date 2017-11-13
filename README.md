@@ -1,5 +1,5 @@
 # em-algorithm-python
-Demonstration of the Expectation Maximization (EM) algorithm to compare two FASTA sequences
+Demonstration of the Expectation Maximization (EM) algorithm to compare multiple DNA sequences read from a FASTA file
 
 Dependencies:  
 Python 3  
