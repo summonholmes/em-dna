@@ -1,10 +1,11 @@
 # em-algorithm-python
 Demonstration of the Expectation Maximization (EM) algorithm to compare multiple DNA sequences read from a FASTA file
 
-Dependencies:  
-Python 3  
-python-biopython  
-python-pprint  
+Dependencies:
+===
+python3  
+python3-biopython  
+python3-pprint  
 
 Usage:
 ===
