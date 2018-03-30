@@ -5,5 +5,5 @@ def init_motifs(motif_width, fasta_file_seq, len_list, motif_start_pos):
 		y = motif_start_pos[i]
 		z = motif_start_pos[i] + motif_width
 		motif.append(x[y:z])
-	# print("\nList the motifs from each sequence: ", motif)
+		
 	return motif
