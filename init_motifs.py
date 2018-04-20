@@ -1,3 +1,36 @@
+from random import randint, seed
+from prep_em_matrices import new_em_zeros_matrix
+
+
+def em_motif(motif_width, fasta_file_seq, len_list, len_seq):
+    em_seq_motif = new_em_zeros_matrix(len_list, len_seq, motif_width)
+    for i in range(len_list):
+        for j in range(len_seq[i] - motif_width):
+            x = fasta_file_seq[i]
+            z = j + motif_width
+            em_seq_motif[i][j] = x[j:z]
+    return em_seq_motif
+
+
+def init_background_motif_counts(len_list, count_bases, motif):
+    background_actg = {
+        "background_a": count_bases[0],
+        "background_c": count_bases[1],
+        "background_t": count_bases[2],
+        "background_g": count_bases[3]
+    }
+    for i in range(len_list):
+        background_actg["background_a"] -= motif[i].count('A')
+        background_actg["background_c"] -= motif[i].count('C')
+        background_actg["background_t"] -= motif[i].count('T')
+        background_actg["background_g"] -= motif[i].count('G')
+    count_background_bases = [
+        background_actg["background_a"], background_actg["background_c"],
+        background_actg["background_t"], background_actg["background_g"]
+    ]
+    return count_background_bases
+
+
 def init_motifs(motif_width, fasta_file_seq, len_list, motif_start_pos):
     motif = []
     for i in range(len_list):
@@ -6,3 +39,9 @@ def init_motifs(motif_width, fasta_file_seq, len_list, motif_start_pos):
         z = motif_start_pos[i] + motif_width
         motif.append(x[y:z])
     return motif
+
+
+def start_rand(len_list, len_seq, motif_width):
+    seed(a=None)
+    motif_start_pos = [randint(0, (i - motif_width)) for i in len_seq]
+    return motif_start_pos
