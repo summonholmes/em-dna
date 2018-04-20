@@ -1,9 +1,8 @@
+from new_zeros_matrix import new_zeros_matrix
+
+
 def add_pseudocounts(motif_width, score_matrix):
-    score_matrix_pseudo = []
-    for i in range(4):
-        score_matrix_pseudo.append([])
-        for j in range(motif_width + 1):
-            score_matrix_pseudo[i].append(0)
+    score_matrix_pseudo = new_zeros_matrix(4, motif_width + 1)
     for i in range(4):
         for j in range(motif_width + 1):
             score_matrix_pseudo[i][j] = score_matrix[i][j]

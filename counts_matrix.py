@@ -1,10 +1,9 @@
+from new_zeros_matrix import new_zeros_matrix
+
+
 def counts_matrix(motif_width, len_list, count_background_bases,
                   normalize_count_all_motif_bases):
-    score_matrix = []
-    for i in range(4):
-        score_matrix.append([])
-        for j in range(motif_width + 1):
-            score_matrix[i].append(0)
+    score_matrix = new_zeros_matrix(4, motif_width + 1)
     score_matrix[0][0] = count_background_bases[0]
     score_matrix[1][0] = count_background_bases[1]
     score_matrix[2][0] = count_background_bases[2]

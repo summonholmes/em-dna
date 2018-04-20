@@ -44,10 +44,8 @@ def start_the_em(max_bit_score_arr, final_record, motif_width, user_align,
         score_matrix_odds = odds_matrix(motif_width, score_matrix_freq)
         score_matrix_log_odds = log_odds_matrix(motif_width, score_matrix_odds)
         score_matrix_entropy = entropy_matrix(motif_width, score_matrix_freq)
-        score_matrix_entropy_sum = sum_entropy(motif_width,
-                                               score_matrix_entropy)
-        score_matrix_information = information(motif_width,
-                                               score_matrix_entropy_sum)
+        score_matrix_entropy_sum = sum_entropy(score_matrix_entropy)
+        score_matrix_information = information(score_matrix_entropy_sum)
         max_bit_score_arr.append(score_matrix_information)
         max_bit_score_arr.sort()
         em_motifs = em_motif(motif_width, fasta_file_seq, len_list, len_seq)

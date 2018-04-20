@@ -1,15 +1,7 @@
 from pprint import pprint
+from new_zeros_matrix import new_zeros_matrix
 
 
 def init_score_matrix(motif_width):
-    new_matrix = []
-    for i in range(4):
-        new_matrix.append([])
-        for j in range(motif_width + 1):
-            new_matrix[i].append(0)
-    print("\nInitiate score blank matrix")
-    for k in range(motif_width + 1):
-        print(' ', k, end="")
-    print('')
-    print('A', 'C', 'G', 'T', pprint(new_matrix))
+    new_matrix = new_zeros_matrix(4, motif_width + 1)
     return new_matrix

@@ -1,9 +1,8 @@
+from new_zeros_matrix import new_zeros_matrix
+
+
 def freq_matrix(motif_width, count_background_bases, score_matrix_pseudo):
-    score_matrix_freq = []
-    for i in range(4):
-        score_matrix_freq.append([])
-        for j in range(motif_width + 1):
-            score_matrix_freq[i].append(0)
+    score_matrix_freq = new_zeros_matrix(4, motif_width + 1)
     for i in range(4):
         for j in range(motif_width + 1):
             score_matrix_freq[i][j] = score_matrix_pseudo[i][j]
