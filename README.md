@@ -3,7 +3,7 @@ Demonstration of the Expectaeion Maximization (EM) algorithm to compare multiple
 This is a machine learning algorithm performed on multiple DNA sequences to find the optimal alignment position.  The program will ("almost") always provide the same final output, although each run is unique.  This is because the starting positions of the DNA motif length are always randomized.  After enough iterations, convergence occurs to identify the optimal set of scores, position, and motifs.
 
 ## Getting Started
-The program requires few dependences, and should be trivial to set up.  However, an in-depth understanding the EM algorithm requires some knowledge of bioinformatics, data science, and machine learning.
+The program requires few dependences, and should be trivial to set up.  However, an in-depth understanding of the EM algorithm requires some knowledge of bioinformatics, data science, and machine learning.
 
 ### Dependenciese:
 * python3  
