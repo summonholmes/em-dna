@@ -1,5 +1,5 @@
 from random import randint, seed
-from prep_em_matrices import new_em_zeros_matrix
+from prep_em_matrices import blank_matrix, new_em_zeros_matrix
 
 
 def em_motif(motif_width, fasta_file_seq, len_list, len_seq):
@@ -39,6 +39,15 @@ def init_motifs(motif_width, fasta_file_seq, len_list, motif_start_pos):
         z = motif_start_pos[i] + motif_width
         motif.append(x[y:z])
     return motif
+
+
+def init_scores_pos_motifs(user_iter):
+    scores_pos_motifs = {
+        "max_scores": blank_matrix(user_iter),
+        "max_pos": blank_matrix(user_iter),
+        "max_motifs": blank_matrix(user_iter)
+    }
+    return scores_pos_motifs
 
 
 def start_rand(len_list, len_seq, motif_width):

@@ -5,7 +5,7 @@ from prep_em_matrices import counts_matrix, freq_matrix, odds_matrix, log_odds_m
 
 def exp_max_get_max_pos_score(user_iter, len_list, len_seq, motif_width,
                               em_motifs, score_matrix_log_odds,
-                              final_max_score_pos_motif, fasta_file_seq):
+                              scores_pos_motifs, fasta_file_seq):
     for i in range(user_iter):
         for j in range(len_list):
             max_score = -1
@@ -19,14 +19,14 @@ def exp_max_get_max_pos_score(user_iter, len_list, len_seq, motif_width,
                 if power_score_em_motif > max_score:
                     max_pos = k
                     max_score = power_score_em_motif
-            final_max_score_pos_motif["final_max_pos"][i].append(max_pos)
-            final_max_score_pos_motif["final_max_score"][i].append(max_score)
-            final_max_score_pos_motif["final_max_motif"][i].append(
+            scores_pos_motifs["max_pos"][i].append(max_pos)
+            scores_pos_motifs["max_scores"][i].append(max_score)
+            scores_pos_motifs["max_motifs"][i].append(
                 fasta_file_seq[j][max_pos:(max_pos + motif_width)])
         score_matrix_log_odds = exp_max_matrices(
             len_list, fasta_file_seq, motif_width,
-            final_max_score_pos_motif["final_max_pos"][i])
-    return final_max_score_pos_motif
+            scores_pos_motifs["max_pos"][i])
+    return scores_pos_motifs
 
 
 def exp_max_matrices(len_list, fasta_file_seq, motif_width, final_max_pos):
