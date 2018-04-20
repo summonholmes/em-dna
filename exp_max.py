@@ -1,8 +1,6 @@
 from math import pow
 from exp_max_final_max import exp_max_final_max
 from exp_max_get_max_pos_score import exp_max_get_max_pos_score
-from exp_max_score_log_odds import exp_max_score_log_odds
-from exp_max_matrices import exp_max_matrices
 
 
 def exp_max(user_iter, len_list, len_seq, fasta_file_seq, motif_width,

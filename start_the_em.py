@@ -1,6 +1,3 @@
-from input_start_align import input_start_align
-from input_start_iter import input_start_iter
-from input_start_fasta import input_start_fasta
 from start_rand import start_rand
 from count_all_bases import count_all_bases
 from init_motifs import init_motifs
@@ -14,8 +11,6 @@ from odds_matrix import odds_matrix
 from log_odds_matrix import log_odds_matrix
 from entropy_matrix import entropy_matrix
 from sum_entropy import sum_entropy
-from relative_entropy_matrix import relative_entropy_matrix
-from sum_relative_entropy import sum_relative_entropy
 from information import information
 from em_motif import em_motif
 from exp_max import exp_max
@@ -25,7 +20,8 @@ def start_the_em(max_bit_score_arr, final_record, motif_width, user_align,
                  user_iter, fasta_file_seq):
     print("\nNow preparing for E-M...")
     print(
-        "M = Max Motif\nS = Max Score\nP = Max Position\n# = Max Sequence #\nSS = Max Sum Scores"
+        "M = Max Motif\nS = Max Score\nP = Max Position\n# = Max Sequence #"\
+        "\nSS = Max Sum Scores\n\nPlease be patient..."
     )
     for i in range(user_align):
         len_list = len(fasta_file_seq)
