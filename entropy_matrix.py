@@ -10,6 +10,6 @@ def entropy_matrix(motif_width, score_matrix_freq):
     for i in range(4):
         for j in range(motif_width):
             score_matrix_entropy[i][j] = round(
-                score_matrix_freq[i][j+1] * log(score_matrix_freq[i][j+1], 2), 3)
-				
+                score_matrix_freq[i][j + 1] * log(score_matrix_freq[i][j + 1],
+                                                  2), 3)
     return score_matrix_entropy

@@ -12,5 +12,4 @@ def exp_max_score_log_odds(motif_width, list_em_motif, score_matrix_log_odds):
         else:
             print("An error occurred in exp_max")
             exit(0)
-
     return score_em_motif

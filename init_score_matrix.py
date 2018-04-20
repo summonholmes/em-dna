@@ -12,5 +12,4 @@ def init_score_matrix(motif_width):
         print(' ', k, end="")
     print('')
     print('A', 'C', 'G', 'T', pprint(new_matrix))
-
     return new_matrix

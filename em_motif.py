@@ -9,5 +9,4 @@ def em_motif(motif_width, fasta_file_seq, len_list, len_seq):
             x = fasta_file_seq[i]
             z = j + motif_width
             em_seq_motif[i][j] = x[j:z]
-
     return em_seq_motif

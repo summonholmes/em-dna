@@ -10,5 +10,4 @@ def add_pseudocounts(motif_width, score_matrix):
     for i in range(4):
         for j in range(1, motif_width+1):
             score_matrix_pseudo[i][j] += 1
-
     return score_matrix_pseudo

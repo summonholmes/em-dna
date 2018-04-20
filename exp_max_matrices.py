@@ -16,14 +16,13 @@ def exp_max_matrices(len_list, fasta_file_seq, motif_width, final_max_pos):
     count_background_bases = init_background_motif_counts(
         len_list, count_bases, motif)
     count_all_motif_bases = count_motif_bases(motif_width, len_list, motif)
-    normalize_count_motif_bases = normalize_counts(
-        motif_width, len_list, count_all_motif_bases)
-    score_matrix = counts_matrix(
-        motif_width, len_list, count_background_bases, normalize_count_motif_bases)
+    normalize_count_motif_bases = normalize_counts(motif_width, len_list,
+                                                   count_all_motif_bases)
+    score_matrix = counts_matrix(motif_width, len_list, count_background_bases,
+                                 normalize_count_motif_bases)
     score_matrix_pseudo = add_pseudocounts(motif_width, score_matrix)
-    score_matrix_freq = freq_matrix(
-        motif_width, count_background_bases, score_matrix_pseudo)
+    score_matrix_freq = freq_matrix(motif_width, count_background_bases,
+                                    score_matrix_pseudo)
     score_matrix_odds = odds_matrix(motif_width, score_matrix_freq)
     score_matrix_log_odds = log_odds_matrix(motif_width, score_matrix_odds)
-
     return score_matrix_log_odds
