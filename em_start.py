@@ -27,11 +27,6 @@ def init_max_final_sco_seq_pos_mot(user_iter, max_score_pos_motif,
 
 def start_the_em_prep(max_bit_score_arr, final_record, motif_width, user_align,
                       user_iter, fasta_file_seq):
-    print("\nNow preparing for E-M...")
-    print(
-        "M = Max Motif\nS = Max Score\nP = Max Position\n# = Max Sequence #"\
-        "\nSS = Max Sum Scores\n\nPlease be patient..."
-    )
     for i in range(user_align):
         len_list = len(fasta_file_seq)
         len_seq = [len(seq) for seq in fasta_file_seq]

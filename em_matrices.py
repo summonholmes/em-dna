@@ -11,11 +11,10 @@ def blank_matrix(user_iter):
 def counts_matrix(motif_width, len_list, count_background_bases,
                   normalize_count_all_motif_bases):
     score_matrix = new_zeros_matrix(4, motif_width + 1)
-    for i in range(4):
-        score_matrix[i][0] = count_background_bases[i]
     for i in range(len_list):
         for j in range(motif_width):
             for k in range(4):
+                score_matrix[k][0] = count_background_bases[k]
                 if normalize_count_all_motif_bases[k][i][j] == j + 1:
                     score_matrix[k][j + 1] += 1
     return score_matrix
@@ -36,11 +35,15 @@ def freq_matrix(motif_width, count_background_bases, score_matrix_pseudo):
     for i in range(4):
         for j in range(motif_width + 1):
             score_matrix_freq[i][j] = score_matrix_pseudo[i][j]
-    for i in range(4):
         score_matrix_freq[i][0] = round(
             count_background_bases[i] /
             (count_background_bases[0] + count_background_bases[1] +
              count_background_bases[2] + count_background_bases[3]), 3)
+    score_matrix_freq = get_freq_matrix_score(score_matrix_freq, motif_width)
+    return score_matrix_freq
+
+
+def get_freq_matrix_score(score_matrix_freq, motif_width):
     col_totals = [sum(i) for i in zip(*score_matrix_freq)]
     for i in range(4):
         for j in range(1, motif_width + 1):
@@ -119,16 +122,13 @@ def relative_entropy_matrix(motif_width, score_matrix_freq):
 
 
 def sum_entropy(score_matrix_entropy):
-    score_matrix_entropy_sum = [sum(i) for i in zip(*score_matrix_entropy)]
-    for i in score_matrix_entropy_sum:
-        i = round(i, 3) * -1
-    return score_matrix_entropy_sum
+    return [
+        round(j, 3) * -1 for j in [sum(i) for i in zip(*score_matrix_entropy)]
+    ]
 
 
 def sum_relative_entropy(score_matrix_relative_entropy):
-    score_matrix_relative_entropy_sum = [
-        sum(i) for i in zip(*score_matrix_relative_entropy)
+    return [
+        round(j, 3)
+        for j in [sum(i) for i in zip(*score_matrix_relative_entropy)]
     ]
-    for i in score_matrix_relative_entropy_sum:
-        i = round(i, 3)
-    return score_matrix_relative_entropy_sum

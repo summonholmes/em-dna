@@ -2,10 +2,10 @@ from em_check_exception import check_if_fasta, check_if_int
 
 
 def input_start_align():
-    input_start_align = input(
-        "Use 50 initial random starting alignments? ('1' for yes or '0' for no): "
-    )
-    input_start_align = check_if_int(input_start_align)
+    input_start_align = check_if_int(
+        input(
+            "Use 50 initial random starting alignments? ('1' for yes or '0' for no): "
+        ))
     if input_start_align == 1:
         random_start_align = 50
     elif input_start_align == 0:
@@ -28,10 +28,10 @@ def input_start_fasta():
 
 
 def input_start_iter():
-    input_start_iter = input(
-        "Use 500 iterations to perform the E-M steps? ('1' for yes or '0' for no): "
-    )
-    input_start_iter = check_if_int(input_start_iter)
+    input_start_iter = check_if_int(
+        input(
+            "Use 500 iterations to perform the E-M steps? ('1' for yes or '0' for no): "
+        ))
     if input_start_iter == 1:
         number_iter = 500
     elif input_start_iter == 0:
