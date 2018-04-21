@@ -65,13 +65,19 @@ def log_odds_matrix(motif_width, score_matrix_odds):
     return score_matrix_log_odds
 
 
-def odds_matrix(motif_width, score_matrix_freq):
-    score_matrix_odds = new_zeros_matrix(4, motif_width)
-    for i in range(4):
-        for j in range(motif_width):
-            score_matrix_odds[i][j] = round(
-                score_matrix_freq[i][j + 1] / score_matrix_freq[i][0], 3)
-    return score_matrix_odds
+def motif_actg_matrix(len_list):
+    motif_pos_actg = {
+        "motif_pos_a": [],
+        "motif_pos_c": [],
+        "motif_pos_t": [],
+        "motif_pos_g": []
+    }
+    for i in range(len_list):
+        motif_pos_actg["motif_pos_a"].append([])
+        motif_pos_actg["motif_pos_c"].append([])
+        motif_pos_actg["motif_pos_t"].append([])
+        motif_pos_actg["motif_pos_g"].append([])
+    return motif_pos_actg
 
 
 def new_zeros_matrix(amount, motif_width):
@@ -90,6 +96,15 @@ def new_em_zeros_matrix(len_list, len_seq, motif_width):
         for j in range(len_seq[i] - motif_width):
             em_seq_motif[i].append(0)
     return em_seq_motif
+
+
+def odds_matrix(motif_width, score_matrix_freq):
+    score_matrix_odds = new_zeros_matrix(4, motif_width)
+    for i in range(4):
+        for j in range(motif_width):
+            score_matrix_odds[i][j] = round(
+                score_matrix_freq[i][j + 1] / score_matrix_freq[i][0], 3)
+    return score_matrix_odds
 
 
 def relative_entropy_matrix(motif_width, score_matrix_freq):

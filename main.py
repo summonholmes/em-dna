@@ -1,6 +1,6 @@
-from check_if_exception import check_if_int
-from input_start import input_start_align, input_start_iter, input_start_fasta
-from start_the_em_prep import start_the_em_prep
+from em_check_exception import check_if_int
+from em_input_start import input_start_align, input_start_fasta, input_start_iter
+from em_start import start_the_em_prep
 from pprint import pprint
 
 

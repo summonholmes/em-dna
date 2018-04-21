@@ -1,4 +1,4 @@
-from prep_em_matrices import new_zeros_matrix
+from em_matrices import motif_actg_matrix, new_zeros_matrix
 
 
 def add_pseudocounts(motif_width, score_matrix):
@@ -26,17 +26,8 @@ def count_all_bases(fasta_file_seq, len_list):
 
 
 def count_motif_bases(motif_width, len_list, motif):
-    motif_pos_actg = {
-        "motif_pos_a": [],
-        "motif_pos_c": [],
-        "motif_pos_t": [],
-        "motif_pos_g": []
-    }
+    motif_pos_actg = motif_actg_matrix(len_list)
     for i in range(len_list):
-        motif_pos_actg["motif_pos_a"].append([])
-        motif_pos_actg["motif_pos_c"].append([])
-        motif_pos_actg["motif_pos_t"].append([])
-        motif_pos_actg["motif_pos_g"].append([])
         for j in range(motif_width):
             motif_pos_actg["motif_pos_a"][i].append(motif[i].find(
                 'A', j, j + 1))

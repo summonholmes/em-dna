@@ -1,4 +1,4 @@
-from check_if_exception import check_if_int, check_if_fasta
+from em_check_exception import check_if_fasta, check_if_int
 
 
 def input_start_align():
@@ -20,6 +20,13 @@ def input_start_align():
     return random_start_align
 
 
+def input_start_fasta():
+    fasta_file_seq = []
+    user_fasta_path = input("Please specify the path of the fasta file: ")
+    fasta_file_seq = check_if_fasta(fasta_file_seq, user_fasta_path)
+    return fasta_file_seq
+
+
 def input_start_iter():
     input_start_iter = input(
         "Use 500 iterations to perform the E-M steps? ('1' for yes or '0' for no): "
@@ -35,10 +42,3 @@ def input_start_iter():
         print("Unknown option.  Now exiting")
         exit(0)
     return number_iter
-
-
-def input_start_fasta():
-    fasta_file_seq = []
-    user_fasta_path = input("Please specify the path of the fasta file: ")
-    fasta_file_seq = check_if_fasta(fasta_file_seq, user_fasta_path)
-    return fasta_file_seq

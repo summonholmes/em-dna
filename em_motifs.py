@@ -1,5 +1,5 @@
 from random import randint, seed
-from prep_em_matrices import blank_matrix, new_em_zeros_matrix
+from em_matrices import blank_matrix, new_em_zeros_matrix
 
 
 def em_motif(motif_width, fasta_file_seq, len_list, len_seq):
@@ -24,11 +24,10 @@ def init_background_motif_counts(len_list, count_bases, motif):
         background_actg["background_c"] -= motif[i].count('C')
         background_actg["background_t"] -= motif[i].count('T')
         background_actg["background_g"] -= motif[i].count('G')
-    count_background_bases = [
+    return [
         background_actg["background_a"], background_actg["background_c"],
         background_actg["background_t"], background_actg["background_g"]
     ]
-    return count_background_bases
 
 
 def init_motifs(motif_width, fasta_file_seq, len_list, motif_start_pos):
@@ -42,15 +41,13 @@ def init_motifs(motif_width, fasta_file_seq, len_list, motif_start_pos):
 
 
 def init_scores_pos_motifs(user_iter):
-    scores_pos_motifs = {
+    return {
         "max_scores": blank_matrix(user_iter),
         "max_pos": blank_matrix(user_iter),
         "max_motifs": blank_matrix(user_iter)
     }
-    return scores_pos_motifs
 
 
 def start_rand(len_list, len_seq, motif_width):
     seed(a=None)
-    motif_start_pos = [randint(0, (i - motif_width)) for i in len_seq]
-    return motif_start_pos
+    return [randint(0, (i - motif_width)) for i in len_seq]
