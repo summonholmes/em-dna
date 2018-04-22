@@ -24,10 +24,7 @@ def init_background_motif_counts(len_list, count_bases, motif):
         background_actg["background_c"] -= motif[i].count('C')
         background_actg["background_t"] -= motif[i].count('T')
         background_actg["background_g"] -= motif[i].count('G')
-    return [
-        background_actg["background_a"], background_actg["background_c"],
-        background_actg["background_t"], background_actg["background_g"]
-    ]
+    return background_actg
 
 
 def init_motifs(motif_width, fasta_file_seq, len_list, motif_start_pos):

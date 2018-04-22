@@ -43,7 +43,7 @@ def exp_max_matrices(len_list, fasta_file_seq, motif_width, final_max_pos):
 
 
 def exp_max_pos_score_iter(last_motif_pos, motif_width, em_motifs, j,
-                               score_matrix_log_odds, max_score, max_pos):
+                           score_matrix_log_odds, max_score, max_pos):
     for k in range(last_motif_pos):
         score_em_motif = exp_max_score_log_odds(motif_width,
                                                 list(em_motifs[j][k]),

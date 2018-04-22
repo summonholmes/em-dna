@@ -14,6 +14,7 @@ def counts_matrix(motif_width, len_list, count_background_bases,
     for i in range(len_list):
         for j in range(motif_width):
             for k in range(4):
+                # for l in normalize_count_all_motif_bases.keys():
                 score_matrix[k][0] = count_background_bases[k]
                 if normalize_count_all_motif_bases[k][i][j] == j + 1:
                     score_matrix[k][j + 1] += 1

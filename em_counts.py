@@ -16,10 +16,7 @@ def count_all_bases(fasta_file_seq, len_list):
         count_actg["count_c"] += fasta_file_seq[i].count('C')
         count_actg["count_t"] += fasta_file_seq[i].count('T')
         count_actg["count_g"] += fasta_file_seq[i].count('G')
-    return [
-        count_actg["count_a"], count_actg["count_c"], count_actg["count_t"],
-        count_actg["count_g"]
-    ]
+    return count_actg
 
 
 def count_motif_bases(motif_width, len_list, motif):
@@ -38,20 +35,22 @@ def count_motif_bases(motif_width, len_list, motif):
         motif_pos_actg["motif_pos_a"], motif_pos_actg["motif_pos_c"],
         motif_pos_actg["motif_pos_t"], motif_pos_actg["motif_pos_g"]
     ]
+    # return motif_pos_actg
 
 
 def init_background_motif_counts(len_list, count_bases, motif):
     background_actg = {
-        "background_a": count_bases[0],
-        "background_c": count_bases[1],
-        "background_t": count_bases[2],
-        "background_g": count_bases[3]
+        "background_a": count_bases["count_a"],
+        "background_c": count_bases["count_c"],
+        "background_t": count_bases["count_t"],
+        "background_g": count_bases["count_g"]
     }
     for i in range(len_list):
         background_actg["background_a"] -= motif[i].count('A')
         background_actg["background_c"] -= motif[i].count('C')
         background_actg["background_t"] -= motif[i].count('T')
         background_actg["background_g"] -= motif[i].count('G')
+    # return background_actg
     return [
         background_actg["background_a"], background_actg["background_c"],
         background_actg["background_t"], background_actg["background_g"]
@@ -59,6 +58,7 @@ def init_background_motif_counts(len_list, count_bases, motif):
 
 
 def normalize_counts(motif_width, len_list, count_all_motif_bases):
+    # for i in count_all_motif_bases.keys():
     for i in range(4):
         for j in range(len_list):
             for k in range(motif_width):
