@@ -28,6 +28,7 @@ def init_max_final_sco_seq_pos_mot(user_iter, max_score_pos_motif,
 def start_the_em_prep(max_bit_score_arr, final_record, motif_width, user_align,
                       user_iter, fasta_file_seq):
     for i in range(user_align):
+        print("Progress: {:2.1%}".format((i + 1) / user_align), end="\r")
         len_list = len(fasta_file_seq)
         len_seq = [len(seq) for seq in fasta_file_seq]
         count_bases_dict = start_the_em_prep_counts(

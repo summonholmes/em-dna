@@ -31,11 +31,7 @@ def count_motif_bases(motif_width, len_list, motif):
                 'T', j, j + 1))
             motif_pos_actg["motif_pos_g"][i].append(motif[i].find(
                 'G', j, j + 1))
-    return [
-        motif_pos_actg["motif_pos_a"], motif_pos_actg["motif_pos_c"],
-        motif_pos_actg["motif_pos_t"], motif_pos_actg["motif_pos_g"]
-    ]
-    # return motif_pos_actg
+    return motif_pos_actg
 
 
 def init_background_motif_counts(len_list, count_bases, motif):
@@ -50,16 +46,11 @@ def init_background_motif_counts(len_list, count_bases, motif):
         background_actg["background_c"] -= motif[i].count('C')
         background_actg["background_t"] -= motif[i].count('T')
         background_actg["background_g"] -= motif[i].count('G')
-    # return background_actg
-    return [
-        background_actg["background_a"], background_actg["background_c"],
-        background_actg["background_t"], background_actg["background_g"]
-    ]
+    return background_actg
 
 
 def normalize_counts(motif_width, len_list, count_all_motif_bases):
-    # for i in count_all_motif_bases.keys():
-    for i in range(4):
+    for i in count_all_motif_bases.keys():
         for j in range(len_list):
             for k in range(motif_width):
                 count_all_motif_bases[i][j][k] += 1

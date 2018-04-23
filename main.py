@@ -5,9 +5,10 @@ from pprint import pprint
 
 
 def print_results_em(final_motif):
-    print("\nDONE!  First horizontal array: max information.")
-    print("Vertical arrays: positions, scores, and motifs. ")
-    print("\nMAX: Motif\tScore\t Pos\tSeq\tSumScore")
+    print(
+        "\nDONE!  First Horizontal Dictionary: Max scored motif (Alsofound below)"
+    )
+    print("Vertical Dictionary: Max set of positions, scores, and motifs\n")
     pprint(final_motif)
 
 
@@ -20,7 +21,7 @@ def main():
     user_align = input_start_align()
     user_iter = input_start_iter()
     fasta_file_seq = input_start_fasta()
-    print("\nNow preparing for E-M...")
+    print("\nPlease be patient.  Now preparing for E-M...")
     em_results = start_the_em_prep(max_bit_score_arr, final_record,
                                    motif_width, user_align, user_iter,
                                    fasta_file_seq)
