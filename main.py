@@ -6,7 +6,7 @@ from pprint import pprint
 
 def print_results_em(final_motif):
     print(
-        "\nDONE!  First Horizontal Dictionary: Max scored motif (Alsofound below)"
+        "\nDONE!  First Horizontal Dictionary: Max scored motif (Also found below)"
     )
     print("Vertical Dictionary: Max set of positions, scores, and motifs\n")
     pprint(final_motif)
