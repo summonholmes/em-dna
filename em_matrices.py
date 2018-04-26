@@ -36,9 +36,9 @@ def freq_matrix(motif_width, count_background_bases, score_matrix_pseudo):
     for i in range(4):
         for j in range(motif_width + 1):
             score_matrix_freq[i][j] = score_matrix_pseudo[i][j]
-            score_matrix_freq[i][0] = round(
-                list(count_background_bases.values())[i] /
-                sum(list(count_background_bases.values())), 3)
+        score_matrix_freq[i][0] = round(
+            list(count_background_bases.values())[i] / sum(
+                list(count_background_bases.values())), 3)
     score_matrix_freq = get_freq_matrix_score(score_matrix_freq, motif_width)
     return score_matrix_freq
 
