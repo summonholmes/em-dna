@@ -281,17 +281,6 @@ class EM_Matrix(EM_Count):
         return zeros_matrix
 
 
-class EM_Motif(EM_Matrix):
-    def __init__(self):
-        self.em_motifs = self.new_zeros_matrix(
-            self.len_list, (self.len_seq - self.motif_width))
-        for i in range(self.len_list):
-            for j in range(self.len_seq[i] - self.motif_width):
-                x = self.fasta_file_seq[i]
-                z = j + self.motif_width
-                self.em_motifs[i][j] = x[j:z]
-
-
 class EM_Run(EM_Matrix):
     def __init__(self):
         self.init_em_motifs()
@@ -401,4 +390,8 @@ class EM_Run(EM_Matrix):
         return blank_matrix
 
 
-em_align_obj = EM_Core()
+em_core_obj = EM_Core()
+# em_align_obj = EM_Align()
+# em_count_obj = EM_Count()
+# em_matrix_obj = EM_Matrix()
+# em_run_obj = EM_Run()
