@@ -306,7 +306,6 @@ class EM_Run(EM_Matrix):
         self.exp_max_get_max_pos_score()
         self.init_max_final_sco_seq_pos_mot()
         self.finish_em()
-        self.finish_em()
 
     def new_em_zeros_matrix(self, len_list, len_seq, motif_width):
         em_zeros_matrix = []
