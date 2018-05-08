@@ -4,7 +4,7 @@ from pprint import pprint
 from random import randint, seed
 
 
-class EM_Core:
+class EM_Input:
     def __init__(self):
         self.fasta_file_seq = []
         self.input_start_motif_width()
@@ -67,7 +67,7 @@ class EM_Core:
             exit(0)
 
 
-class EM_Align(EM_Core):
+class EM_Core(EM_Input):
     def __init__(self, user_align, fasta_file_seq, motif_width, user_iter):
         self.max_bit_score_arr = []
         self.final_record = []
@@ -75,6 +75,9 @@ class EM_Align(EM_Core):
         self.fasta_file_seq = fasta_file_seq
         self.motif_width = motif_width
         self.user_iter = user_iter
+        self.iterate_user_align()
+
+    def iterate_user_align(self):
         for i in range(self.user_align):
             print(
                 "Progress: {:2.1%}".format((i + 1) / self.user_align),
@@ -96,14 +99,9 @@ class EM_Align(EM_Core):
                 self.em_matrix_obj.score_matrix_log_odds,
                 self.em_matrix_obj.count_bases_dict)
             self.final_record.append(self.em_run_obj.finish)
-        self.final_results = max(
-            self.final_record,
-            key=lambda x: x["max_final_sco_seq_pos_mot"]["sum_score_max_motif"]
-        )
-        pprint(self.final_results)
 
 
-class EM_Count(EM_Align):
+class EM_Count(EM_Core):
     def __init__(self, len_seq, motif_width, len_list, fasta_file_seq):
         self.len_seq = len_seq
         self.motif_width = motif_width
@@ -321,6 +319,9 @@ class EM_Run(EM_Matrix):
         self.init_scores_pos_motifs()
         self.exp_max_get_max_pos_score()
         self.init_max_final_sco_seq_pos_mot()
+        self.iter_score_pos_motifs()
+
+    def iter_score_pos_motifs(self):
         for i in self.scores_pos_motifs.keys():
             self.scores_pos_motifs[i] = self.scores_pos_motifs[i][
                 self.user_iter - 1]
@@ -424,6 +425,10 @@ class EM_Run(EM_Matrix):
         return blank_matrix
 
 
-em_core_obj = EM_Core()
-em_align_obj = EM_Align(em_core_obj.user_align, em_core_obj.fasta_file_seq,
-                        em_core_obj.motif_width, em_core_obj.user_iter)
+em_input_obj = EM_Input()
+em_core_obj = EM_Core(em_input_obj.user_align, em_input_obj.fasta_file_seq,
+                      em_input_obj.motif_width, em_input_obj.user_iter)
+em_core_obj.final_results = max(
+    em_core_obj.final_record,
+    key=lambda x: x["max_final_sco_seq_pos_mot"]["sum_score_max_motif"])
+pprint(em_core_obj.final_results)
