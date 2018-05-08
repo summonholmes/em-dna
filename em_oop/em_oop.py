@@ -305,13 +305,8 @@ class EM_Run(EM_Matrix):
         self.init_scores_pos_motifs()
         self.exp_max_get_max_pos_score()
         self.init_max_final_sco_seq_pos_mot()
-        for i in self.scores_pos_motifs.keys():
-            self.scores_pos_motifs[i] = self.scores_pos_motifs[i][
-                self.user_iter - 1]
-        self.finish = {
-            "max_final_sco_seq_pos_mot": self.max_final_sco_seq_pos_mot,
-            "scores_pos_motifs": self.scores_pos_motifs
-        }
+        self.finish_em()
+        self.finish_em()
 
     def new_em_zeros_matrix(self, len_list, len_seq, motif_width):
         em_zeros_matrix = []
@@ -416,6 +411,15 @@ class EM_Run(EM_Matrix):
                 - 1][self.max_final_sco_seq_pos_mot["max_final_sequence"]]
         self.max_final_sco_seq_pos_mot["sum_score_max_motif"] = sum(
             self.scores_pos_motifs["max_scores"][self.user_iter - 1])
+
+    def finish_em(self):
+        for i in self.scores_pos_motifs.keys():
+            self.scores_pos_motifs[i] = self.scores_pos_motifs[i][
+                self.user_iter - 1]
+        self.finish = {
+            "max_final_sco_seq_pos_mot": self.max_final_sco_seq_pos_mot,
+            "scores_pos_motifs": self.scores_pos_motifs
+        }
 
 
 em_input_obj = EM_Input()
