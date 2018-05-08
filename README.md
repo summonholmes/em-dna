@@ -1,14 +1,14 @@
 # em-algorithm-python
-This is the Expectation-Maximization (EM) machine learning algorithm performed on multiple DNA sequences, with the intention of finding optimal alignment positions.  This program will (almost) always provide the same final output, although no two runs are ever alike.  This is because the starting positions of the DNA motifs are always randomized.  The vast majority of the program code is the expectation step, while the maximization step consists of little code.  This is because construction of log-likelihood is performed matrix-by-matrix; while maximization involves scoring on this log-likelihood, updating the parameters, and then repeating expectation step X number of times.  After enough iterations, convergence occurs to identify the optimal set of scores, position, and motifs.
+This is the Expectation-Maximization (EM) machine learning algorithm performed on multiple DNA sequences, with the intention of finding optimal alignment positions.  This program will (almost) always provide the same final output, although no two runs are ever alike.  This is because the starting positions of the DNA motifs are always randomized.  The vast majority of the program code is the expectation step, while the maximization step consists of little code.  This is because construction of log-likelihood is performed matrix-by-matrix; while maximization involves scoring on this log-likelihood, updating the parameters, and then repeating Expectation step X number of times.  After enough iterations, convergence occurs to identify the optimal set of scores, position, and motifs.
 
 A brief description of the five classes within 'em_oop/main.py':
 1. EM_Input: Load all user data
 
 2. EM_Core: The 1st iteration of alignments, but accompanies the rest of the entire program.  The program can be thought of as one gigantic, quintuple, nested 'for' loop.  Therefore, this is the 'nucleas' of the program.  Child of EM_Input.
 
-3. EM_Count: Performs all counting operations regarding motifs and normalization.
+3. EM_Count: Performs all counting operations regarding motifs and normalization.  Child of EM_Core.
 
-4. EM_Matrix: Consists of the 1st Expectation Step with the end goal of generating the log odds matrix.  Child of EM_Core.
+4. EM_Matrix: Consists of the 1st Expectation Step with the end goal of generating the log odds matrix.  Child of EM_Count.
 
 5. EM_Run: Consists of remaining four inner layers of the 'for' loop from EM_Core.  Maximization is performed, scores are generated against the log odds matrix, and the entire process repeats to convergence.  Note that the function 'exp_max_update_log_odds' is the entire Expectation Step and recyles all functions from EM_Count & EM_Matrix.  Child of EM_Matrix.
 
