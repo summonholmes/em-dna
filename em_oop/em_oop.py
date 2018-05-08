@@ -1,5 +1,5 @@
 from Bio import SeqIO
-from math import log
+from math import pow, log
 from pprint import pprint
 from random import randint, seed
 
@@ -84,8 +84,9 @@ class EM_Core(EM_Input):
                 end="\r")
             self.len_list = len(self.fasta_file_seq)
             self.len_seq = [len(seq) for seq in self.fasta_file_seq]
-            self.em_counter_obj = EM_Count(self.len_seq, self.motif_width,
-                                           self.len_list, self.fasta_file_seq)
+            self.em_counter_obj = EM_Count(self.len_list, self.len_seq,
+                                           self.motif_width,
+                                           self.fasta_file_seq)
             self.em_matrix_obj = EM_Matrix(
                 self.em_counter_obj.motif_width, self.em_counter_obj.len_list,
                 self.em_counter_obj.count_bases_dict)
@@ -93,19 +94,18 @@ class EM_Core(EM_Input):
                 "score_matrix_information"])
             self.max_bit_score_arr.sort()
             self.em_run_obj = EM_Run(
-                self.em_matrix_obj.len_list, self.em_counter_obj.len_seq,
-                self.em_matrix_obj.motif_width,
-                self.em_counter_obj.fasta_file_seq, self.user_iter,
-                self.em_matrix_obj.score_matrix_log_odds,
-                self.em_matrix_obj.count_bases_dict)
+                self.user_iter, self.em_matrix_obj.len_list,
+                self.em_counter_obj.len_seq, self.em_matrix_obj.motif_width,
+                self.em_matrix_obj.score_matrix_dict["score_matrix_log_odds"],
+                self.em_counter_obj.fasta_file_seq)
             self.final_record.append(self.em_run_obj.finish)
 
 
 class EM_Count(EM_Core):
-    def __init__(self, len_seq, motif_width, len_list, fasta_file_seq):
+    def __init__(self, len_list, len_seq, motif_width, fasta_file_seq):
+        self.len_list = len_list
         self.len_seq = len_seq
         self.motif_width = motif_width
-        self.len_list = len_list
         self.fasta_file_seq = fasta_file_seq
         self.start_rand()
         self.count_all_bases()
@@ -136,6 +136,7 @@ class EM_Count(EM_Core):
             self.count_bases["count_c"] += self.fasta_file_seq[i].count('C')
             self.count_bases["count_t"] += self.fasta_file_seq[i].count('T')
             self.count_bases["count_g"] += self.fasta_file_seq[i].count('G')
+        return self.count_bases
 
     def init_motifs(self):
         self.motif = []
@@ -162,19 +163,6 @@ class EM_Count(EM_Core):
             self.count_background_bases["background_g"] -= self.motif[i].count(
                 'G')
 
-    def count_motif_bases(self):
-        self.motif_actg_matrix()
-        for i in range(self.len_list):
-            for j in range(self.motif_width):
-                self.count_all_motif_bases["motif_pos_a"][i].append(
-                    self.motif[i].find('A', j, j + 1))
-                self.count_all_motif_bases["motif_pos_c"][i].append(
-                    self.motif[i].find('C', j, j + 1))
-                self.count_all_motif_bases["motif_pos_t"][i].append(
-                    self.motif[i].find('T', j, j + 1))
-                self.count_all_motif_bases["motif_pos_g"][i].append(
-                    self.motif[i].find('G', j, j + 1))
-
     def motif_actg_matrix(self):
         self.count_all_motif_bases = {
             "motif_pos_a": [],
@@ -187,6 +175,19 @@ class EM_Count(EM_Core):
             self.count_all_motif_bases["motif_pos_c"].append([])
             self.count_all_motif_bases["motif_pos_t"].append([])
             self.count_all_motif_bases["motif_pos_g"].append([])
+
+    def count_motif_bases(self):
+        self.motif_actg_matrix()
+        for i in range(self.len_list):
+            for j in range(self.motif_width):
+                self.count_all_motif_bases["motif_pos_a"][i].append(
+                    self.motif[i].find('A', j, j + 1))
+                self.count_all_motif_bases["motif_pos_c"][i].append(
+                    self.motif[i].find('C', j, j + 1))
+                self.count_all_motif_bases["motif_pos_t"][i].append(
+                    self.motif[i].find('T', j, j + 1))
+                self.count_all_motif_bases["motif_pos_g"][i].append(
+                    self.motif[i].find('G', j, j + 1))
 
     def normalize_counts(self):
         for i in self.count_all_motif_bases.keys():
@@ -213,6 +214,14 @@ class EM_Matrix(EM_Count):
             "score_matrix_information": self.score_matrix_information,
             "score_matrix_log_odds": self.score_matrix_log_odds
         }
+
+    def new_zeros_matrix(self, amount, motif_width):
+        zeros_matrix = []
+        for i in range(amount):
+            zeros_matrix.append([])
+            for j in range(motif_width):
+                zeros_matrix[i].append(0)
+        return zeros_matrix
 
     def counts_matrix(self):
         self.score_matrix = self.new_zeros_matrix(4, self.motif_width + 1)
@@ -268,7 +277,6 @@ class EM_Matrix(EM_Count):
             for j in range(self.motif_width):
                 self.score_matrix_log_odds[i][j] = round(
                     log(self.score_matrix_odds[i][j], 2), 3)
-        return self.score_matrix_log_odds
 
     def entropy_matrix(self):
         self.score_matrix_entropy = self.new_zeros_matrix(4, self.motif_width)
@@ -277,6 +285,7 @@ class EM_Matrix(EM_Count):
                 self.score_matrix_entropy[i][j] = round(
                     self.score_matrix_freq[i][j + 1] * log(
                         self.score_matrix_freq[i][j + 1], 2), 3)
+        return self.score_matrix_entropy
 
     def sum_entropy(self):
         self.score_matrix_entropy_sum = [
@@ -288,40 +297,14 @@ class EM_Matrix(EM_Count):
         self.score_matrix_information = max(
             [round(2 - i, 3) for i in self.score_matrix_entropy_sum])
 
-    def new_zeros_matrix(self, amount, motif_width):
-        zeros_matrix = []
-        for i in range(amount):
-            zeros_matrix.append([])
-            for j in range(motif_width):
-                zeros_matrix[i].append(0)
-        return zeros_matrix
-
-    def new_motif_zeros_matrix(self, len_list, len_seq, motif_width):
-        motif_zeros_matrix = []
-        for i in range(len_list):
-            motif_zeros_matrix.append([])
-            for j in range(len_seq[i] - motif_width):
-                motif_zeros_matrix[i].append(0)
-        return motif_zeros_matrix
-
 
 class EM_Run(EM_Matrix):
-    def __init__(self, len_list, len_seq, motif_width, fasta_file_seq,
-                 user_iter, score_matrix_log_odds, count_bases_dict):
-        self.len_list = len_list
-        self.len_seq = len_seq
-        self.motif_width = motif_width
-        self.fasta_file_seq = fasta_file_seq
-        self.user_iter = user_iter
-        self.score_matrix_log_odds = score_matrix_log_odds
-        self.count_bases_dict = count_bases_dict
-        self.init_em_motifs()
+    def __init__(self, user_iter, len_list, len_seq, motif_width,
+                 score_matrix_log_odds, fast_file_seq):
+        self.em_motif()
         self.init_scores_pos_motifs()
         self.exp_max_get_max_pos_score()
         self.init_max_final_sco_seq_pos_mot()
-        self.iter_score_pos_motifs()
-
-    def iter_score_pos_motifs(self):
         for i in self.scores_pos_motifs.keys():
             self.scores_pos_motifs[i] = self.scores_pos_motifs[i][
                 self.user_iter - 1]
@@ -330,28 +313,41 @@ class EM_Run(EM_Matrix):
             "scores_pos_motifs": self.scores_pos_motifs
         }
 
-    def init_em_motifs(self):
-        self.em_motifs = self.new_motif_zeros_matrix(
-            self.len_list, self.len_seq, self.motif_width)
+    def new_em_zeros_matrix(self, len_list, len_seq, motif_width):
+        em_zeros_matrix = []
+        for i in range(len_list):
+            em_zeros_matrix.append([])
+            for j in range(len_seq[i] - motif_width):
+                em_zeros_matrix[i].append(0)
+        return em_zeros_matrix
+
+    def blank_matrix(self, user_iter):
+        blank_matrix = []
+        for i in range(user_iter):
+            blank_matrix.append([])
+        return blank_matrix
+
+    def init_scores_pos_motifs(self):
+        self.scores_pos_motifs = {
+            "max_scores": self.blank_matrix(self.user_iter),
+            "max_pos": self.blank_matrix(self.user_iter),
+            "max_motifs": self.blank_matrix(self.user_iter)
+        }
+
+    def em_motif(self):
+        self.em_motifs = self.new_em_zeros_matrix(self.len_list, self.len_seq,
+                                                  self.motif_width)
         for i in range(self.len_list):
             for j in range(self.len_seq[i] - self.motif_width):
                 x = self.fasta_file_seq[i]
                 z = j + self.motif_width
                 self.em_motifs[i][j] = x[j:z]
 
-    def init_scores_pos_motifs(self):
-        self.scores_pos_motifs = {
-            "max_scores": self.blank_matrix(),
-            "max_pos": self.blank_matrix(),
-            "max_motifs": self.blank_matrix()
-        }
-
     def exp_max_get_max_pos_score(self):
-        self.max_pos_score = {"max_pos": -1, "max_score": -1}
         for i in range(self.user_iter):
             for j in range(self.len_list):
                 self.last_motif_pos = self.len_seq[j] - self.motif_width
-                self.exp_max_pos_score_iter(j)
+                self.exp_max_pos_score_iter(j, -1, -1)
                 self.scores_pos_motifs["max_pos"][i].append(
                     self.max_pos_score["max_pos"])
                 self.scores_pos_motifs["max_scores"][i].append(
@@ -359,35 +355,38 @@ class EM_Run(EM_Matrix):
                 self.scores_pos_motifs["max_motifs"][i].append(
                     self.fasta_file_seq[j][self.max_pos_score["max_pos"]:(
                         self.max_pos_score["max_pos"] + self.motif_width)])
-            self.exp_max_matrices(i)
+            self.exp_max_matrices(self.scores_pos_motifs["max_pos"][i])
+        self.max_score_pos_motif = self.scores_pos_motifs
 
-    def exp_max_pos_score_iter(self, j):
+    def exp_max_pos_score_iter(self, j, max_score, max_pos):
         for k in range(self.last_motif_pos):
-            self.exp_max_score_log_odds(j, k)
-            sum_score_em_motif = sum(self.score_em_motif)
-            power_score_em_motif = round(pow(2, sum_score_em_motif), 3)
-            if power_score_em_motif > self.max_pos_score["max_score"]:
-                self.max_pos_score["max_pos"] = k
-                self.max_pos_score["max_score"] = power_score_em_motif
+            self.exp_max_score_log_odds(list(self.em_motifs[j][k]))
+            self.sum_score_em_motif = sum(self.score_em_motif)
+            self.power_score_em_motif = round(
+                pow(2, self.sum_score_em_motif), 3)
+            if self.power_score_em_motif > max_score:
+                max_pos = k
+                max_score = self.power_score_em_motif
+        self.max_pos_score = {"max_pos": max_pos, "max_score": max_score}
 
-    def exp_max_score_log_odds(self, j, k):
+    def exp_max_score_log_odds(self, list_em_motif):
         self.score_em_motif = []
         for l in range(self.motif_width):
-            if list(self.em_motifs[j][k])[l] == 'A':
+            if list_em_motif[l] == 'A':
                 self.score_em_motif.append(self.score_matrix_log_odds[0][l])
-            elif list(self.em_motifs[j][k])[l] == 'C':
+            elif list_em_motif[l] == 'C':
                 self.score_em_motif.append(self.score_matrix_log_odds[1][l])
-            elif list(self.em_motifs[j][k])[l] == 'T':
+            elif list_em_motif[l] == 'T':
                 self.score_em_motif.append(self.score_matrix_log_odds[2][l])
-            elif list(self.em_motifs[j][k])[l] == 'G':
+            elif list_em_motif[l] == 'G':
                 self.score_em_motif.append(self.score_matrix_log_odds[3][l])
             else:
                 print("An error occurred in exp_max")
                 exit(0)
 
-    def exp_max_matrices(self, i):
+    def exp_max_matrices(self, final_max_pos):
+        self.motif_start_pos = final_max_pos
         self.count_all_bases()
-        self.motif_start_pos = self.scores_pos_motifs["max_pos"][i]
         self.init_motifs()
         self.init_background_motif_counts()
         self.count_motif_bases()
@@ -401,7 +400,7 @@ class EM_Run(EM_Matrix):
     def init_max_final_sco_seq_pos_mot(self):
         self.max_final_sco_seq_pos_mot = {
             "max_final_score":
-            max(self.scores_pos_motifs["max_scores"][self.user_iter - 1])
+            max(self.max_score_pos_motif["max_scores"][self.user_iter - 1])
         }
         self.max_final_sco_seq_pos_mot[
             "max_final_sequence"] = self.scores_pos_motifs[
@@ -417,12 +416,6 @@ class EM_Run(EM_Matrix):
                 - 1][self.max_final_sco_seq_pos_mot["max_final_sequence"]]
         self.max_final_sco_seq_pos_mot["sum_score_max_motif"] = sum(
             self.scores_pos_motifs["max_scores"][self.user_iter - 1])
-
-    def blank_matrix(self):
-        blank_matrix = []
-        for i in range(self.user_iter):
-            blank_matrix.append([])
-        return blank_matrix
 
 
 em_input_obj = EM_Input()
