@@ -97,7 +97,8 @@ class EM_Core(EM_Input):
                 self.user_iter, self.em_matrix_obj.len_list,
                 self.em_counter_obj.len_seq, self.em_matrix_obj.motif_width,
                 self.em_matrix_obj.score_matrix_dict["score_matrix_log_odds"],
-                self.em_counter_obj.fasta_file_seq)
+                self.em_counter_obj.fasta_file_seq,
+                self.em_matrix_obj.count_bases_dict)
             self.final_record.append(self.em_run_obj.finish)
 
 
@@ -300,7 +301,14 @@ class EM_Matrix(EM_Count):
 
 class EM_Run(EM_Matrix):
     def __init__(self, user_iter, len_list, len_seq, motif_width,
-                 score_matrix_log_odds, fast_file_seq):
+                 score_matrix_log_odds, fasta_file_seq, count_bases_dict):
+        self.user_iter = user_iter
+        self.len_list = len_list
+        self.len_seq = len_seq
+        self.motif_width = motif_width
+        self.score_matrix_log_odds = score_matrix_log_odds
+        self.fasta_file_seq = fasta_file_seq
+        self.count_bases_dict = count_bases_dict
         self.em_motif()
         self.init_scores_pos_motifs()
         self.exp_max_get_max_pos_score()
@@ -350,6 +358,7 @@ class EM_Run(EM_Matrix):
                     self.fasta_file_seq[j][self.max_pos_score["max_pos"]:(
                         self.max_pos_score["max_pos"] + self.motif_width)])
             self.exp_max_matrices(self.scores_pos_motifs["max_pos"][i])
+            print(self.scores_pos_motifs["max_pos"][i]) # Trouble area!  Max position is not updated!
         self.max_score_pos_motif = self.scores_pos_motifs
 
     def exp_max_pos_score_iter(self, j, max_score, max_pos):
@@ -378,7 +387,8 @@ class EM_Run(EM_Matrix):
                 print("An error occurred in exp_max")
                 exit(0)
 
-    def exp_max_matrices(self, final_max_pos):
+    def exp_max_matrices(
+            self, final_max_pos):  # Trouble area!  Log odds is not updated!
         self.motif_start_pos = final_max_pos
         self.count_all_bases()
         self.init_motifs()
