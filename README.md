@@ -10,7 +10,7 @@ A brief description of the five classes within 'em_oop/main.py':
 
 4. EM_Matrix: Consists of the 1st Expectation Step with the end goal of generating the log odds matrix.  Child of EM_Count.
 
-5. EM_Run: Consists of remaining four inner layers of the 'for' loop from EM_Core.  Maximization is performed, scores are generated against the log odds matrix, and the entire process repeats to convergence.  Note that the function 'exp_max_update_log_odds' is the entire Expectation Step and recyles all functions from EM_Count & EM_Matrix.  Child of EM_Matrix.
+5. EM_Run: Consists of remaining four inner layers of the 'for' loop from EM_Core.  Maximization is performed, scores are generated against the log odds matrix, and the entire process repeats to convergence.  Note that the function 'exp_max_update_log_odds' is the entire Expectation Step and recycles all functions from EM_Count & EM_Matrix.  Child of EM_Matrix.
 
 ## Getting Started
 The program requires few dependences and should be trivial to set up.  However, an in-depth understanding of the EM algorithm requires some knowledge of bioinformatics, data science, and machine learning.  I'd recommend using the 'main.py' file in the 'em_oop' folder, because the process is more easily understood.  However, you may also run 'main.py' in 'em_functional' file if you prefer functional programming.
