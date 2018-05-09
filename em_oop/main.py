@@ -150,7 +150,6 @@ class EM_Count(EM_Core):
                 i].count('T')
             self.total_count_all_bases["count_g"] += self.fasta_file_seqs[
                 i].count('G')
-        return self.total_count_all_bases
 
     def init_motifs(self):
         self.the_initial_random_motif = []
@@ -301,7 +300,6 @@ class EM_Matrix(EM_Count):
                 self.score_matrix_entropy[i][j] = round(
                     self.score_matrix_freq[i][j + 1] * log(
                         self.score_matrix_freq[i][j + 1], 2), 3)
-        return self.score_matrix_entropy
 
     def sum_entropy(self):
         self.score_matrix_entropy_sum = [
