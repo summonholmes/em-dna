@@ -5,7 +5,7 @@ Optimal alignment positions and motifs are the latent variables requiring detect
 
 Since the starting positions of the DNA motifs are always randomized, no two runs are ever alike.  However, when provided the same input more than once, the program results are (almost) always the same.
 
-The Expectation Step composes the vast majority of program code.  Construction of log-likelihood is performed matrix-by-matrix, requiring more preparation.  The Maximization Step scores on the log-likelihood derived from the previous Expectation Step.  Using the maximum score and its current information about optimal positions and motifs, the Expectation and Maximization Steps are repeated X number of times.  After enough iterations, convergence occurs to identify the optimal alignment positions and motifs.
+The Expectation Step composes the vast majority of program code.  Construction of log-likelihood function is performed matrix-by-matrix, requiring more preparation.  The Maximization Step scores on the log-likelihood function derived from the previous Expectation Step.  Using the maximum score and its current information about optimal positions and motifs, the Expectation and Maximization Steps are repeated X number of times.  After enough iterations, convergence occurs to identify the optimal alignment positions and motifs.
 
 A brief description of the five classes within 'em_oop/main.py':
 1. EM_Input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.  Parent of all classes.
