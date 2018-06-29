@@ -5,7 +5,7 @@ Optimal alignment positions and motifs are the latent variables requiring detect
 
 Since the starting positions of the DNA motifs are always randomized, no two runs are ever alike.  However, when provided the same input more than once, the program results are (almost) always the same.
 
-The Expectation Step composes the vast majority of program code.  Construction of the log-likelihood function is performed matrix-by-matrix, requiring more preparation.  The Maximization Step scores on the log-likelihood function derived from the previous Expectation Step.  Using the maximum score and its current information about optimal positions and motifs, the Expectation and Maximization Steps are repeated X number of times.  After enough iterations, convergence occurs to identify the optimal alignment positions and motifs.
+The Expectation Step composes the vast majority of program code.  Construction of the log-likelihood function is performed matrix-by-matrix, requiring more preparation.  The Maximization Step scores on the log-likelihood function derived from the previous Expectation Step.  Using the maximum score plus the current information about optimal positions and motifs, the Expectation and Maximization Steps are repeated X number of times.  After enough iterations, convergence occurs to identify the optimal alignment positions and motifs.
 
 A brief description of the five classes within 'em_oop/main.py':
 1. EM_Input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.  Parent of all classes.
@@ -19,11 +19,12 @@ A brief description of the five classes within 'em_oop/main.py':
 5. EM_Run: Consists of remaining four inner layers of the 'for' loop from EM_Core.  Maximization is performed, scores are calculated against the log odds matrix, and the entire process repeats to convergence.  Note that the function 'exp_max_update_log_odds' is the entire Expectation Step and recycles all functions from EM_Count & EM_Matrix.  Child of EM_Matrix.
 
 ## Getting Started
-The program requires few dependences and should be trivial to set up.  However, an in-depth understanding of the EM algorithm requires some knowledge of bioinformatics, data science, and machine learning.  I'd recommend using the 'main.py' file in the 'em_oop' folder, because the process is more easily understood.  However, you may also run 'main.py' in 'em_functional' if you prefer functional programming.
+The program requires few dependences and should be trivial to set up.  However, an in-depth understanding of the EM algorithm requires some knowledge of bioinformatics, data science, and machine learning.
 
 ### Dependenciese:
 * python3  
 * python3-biopython  
+* python3-numpy
 * python3-pprint  
 
 ### Usage:
@@ -37,110 +38,104 @@ C:\path\to\main.py C:\path\to\python3.exe main.py
 ```
 ### Example Run:
 ```
- summonholmes@10x-Orange-G  ~/Documents/em-algorithm-python   master  conda-python main.py
-Welcome to my Python implementation of Expectation-Maximization
+shanekimble@Shanes-MacBook-Pro  ~/em-algorithm-python   master  python main.py
 Please specify the width of the motif: 6
-Use 50 initial random starting alignments? ('1' for yes or '0' for no): 1
-Use 500 iterations to perform the E-M steps? ('1' for yes or '0' for no): 1
+Use 50 initial rand starting aligns? ('1' for yes or '0' for no): 1
+Use 500 iters to perform the E-M steps? ('1' for yes or '0' for no): 0
+Please specify a value for the number of iters: 50
 Please specify the path of the fasta file: example.fasta
-
-Please be patient.  Now preparing for E-M...
-Progress: 100.0%
-DONE!  First Horizontal Dictionary: Max scored motif (Alsofound below)
-Vertical Dictionary: Max set of positions, scores, and motifs
-
-{'max_final_sco_seq_pos_mot': {'max_final_motif': 'TTATCT',
-                               'max_final_position': 20,
-                               'max_final_score': 349.706,
-                               'max_final_sequence': 12,
-                               'sum_score_max_motif': 4265.537},
- 'scores_pos_motifs': {'max_motifs': ['TTATCA',
-                                      'CTGACT',
-                                      'CTATCA',
-                                      'ATAACT',
-                                      'CTGATT',
-                                      'CTATCT',
-                                      'TTATCA',
-                                      'TTATCA',
-                                      'CTATAA',
-                                      'CTATCT',
-                                      'ATTTCA',
-                                      'TTGTAA',
-                                      'TTATCT',
-                                      'TTATCT',
-                                      'TTATCA',
-                                      'CTATAA',
-                                      'TTATCC',
-                                      'AAGTAA',
-                                      'TTGATA',
-                                      'ATAACA',
-                                      'CTGTAT',
-                                      'CTGTAT',
-                                      'CTATCT',
-                                      'TTGTCT',
-                                      'TTATCT',
-                                      'TAGTCT',
-                                      'TTATCA',
-                                      'CTATCT',
-                                      'TTGTCA'],
-                       'max_pos': [18,
-                                   28,
-                                   15,
-                                   19,
-                                   15,
-                                   18,
-                                   20,
-                                   2,
-                                   17,
-                                   14,
-                                   31,
-                                   33,
-                                   20,
-                                   2,
-                                   10,
-                                   3,
-                                   13,
-                                   28,
-                                   15,
-                                   26,
-                                   12,
-                                   0,
-                                   23,
-                                   4,
-                                   17,
-                                   29,
-                                   19,
-                                   15,
-                                   2],
-                       'max_scores': [278.783,
-                                      25.67,
-                                      173.766,
-                                      17.802,
-                                      4.491,
-                                      217.972,
-                                      278.783,
-                                      278.783,
-                                      56.493,
-                                      217.972,
-                                      9.87,
-                                      55.793,
-                                      349.706,
-                                      349.706,
-                                      278.783,
-                                      56.493,
-                                      36.504,
-                                      1.269,
-                                      5.744,
-                                      14.192,
-                                      43.622,
-                                      43.622,
-                                      217.972,
-                                      215.269,
-                                      349.706,
-                                      18.405,
-                                      278.783,
-                                      217.972,
-                                      171.611]}}
+{'final_scores_seqs_posits_motifs': {'final_motif': 'TTATCA',
+                                     'final_pos': 18,
+                                     'final_score': 411.85700000000003,
+                                     'final_seq': 0,
+                                     'final_sum_scores': 4301.683},
+ 'max_scores_posits_motifs': {'max_motifs_matrix': ['TTATCA',
+                                                    'CGGTCA',
+                                                    'CTATCA',
+                                                    'CAACCA',
+                                                    'TTACAA',
+                                                    'CTATCT',
+                                                    'TTATCA',
+                                                    'TTATCA',
+                                                    'CTATAA',
+                                                    'CTATCT',
+                                                    'TGGTCA',
+                                                    'TTGTAA',
+                                                    'TTATCT',
+                                                    'TTATCT',
+                                                    'TTATCA',
+                                                    'CTATAA',
+                                                    'TTATCC',
+                                                    'GGATAA',
+                                                    'TGATAA',
+                                                    'CTAGTA',
+                                                    'GTATCC',
+                                                    'GTATCC',
+                                                    'CTATCT',
+                                                    'CTATCC',
+                                                    'TTATCT',
+                                                    'CTATCG',
+                                                    'TTATCA',
+                                                    'CTATCT',
+                                                    'TTGTCA'],
+                              'max_posits_matrix': [18,
+                                                    22,
+                                                    15,
+                                                    29,
+                                                    19,
+                                                    18,
+                                                    20,
+                                                    2,
+                                                    17,
+                                                    14,
+                                                    21,
+                                                    33,
+                                                    20,
+                                                    2,
+                                                    10,
+                                                    3,
+                                                    13,
+                                                    12,
+                                                    16,
+                                                    33,
+                                                    14,
+                                                    2,
+                                                    23,
+                                                    26,
+                                                    17,
+                                                    15,
+                                                    19,
+                                                    15,
+                                                    2],
+                              'max_scores_matrix': [411.85700000000003,
+                                                    11.096,
+                                                    298.58499999999998,
+                                                    1.863,
+                                                    11.616,
+                                                    158.79300000000001,
+                                                    411.85700000000003,
+                                                    411.85700000000003,
+                                                    90.510000000000005,
+                                                    158.79300000000001,
+                                                    15.305999999999999,
+                                                    25.829999999999998,
+                                                    219.03200000000001,
+                                                    219.03200000000001,
+                                                    411.85700000000003,
+                                                    90.510000000000005,
+                                                    115.36,
+                                                    5.3369999999999997,
+                                                    22.423999999999999,
+                                                    2.085,
+                                                    27.454999999999998,
+                                                    27.454999999999998,
+                                                    158.79300000000001,
+                                                    83.632999999999996,
+                                                    219.03200000000001,
+                                                    35.851999999999997,
+                                                    411.85700000000003,
+                                                    158.79300000000001,
+                                                    85.212999999999994]}}
 ```
 
 ## License
