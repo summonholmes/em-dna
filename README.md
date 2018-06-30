@@ -8,11 +8,11 @@ Since the starting positions of the DNA motifs are always randomized, no two run
 The Expectation Step composes the vast majority of program code.  Construction of the log-likelihood function is performed matrix-by-matrix, requiring more preparation.  The Maximization Step scores on the log-likelihood function derived from the previous Expectation Step.  Using the maximum score plus the current information about optimal positions and motifs, the Expectation and Maximization Steps are repeated X number of times.  After enough iterations, convergence occurs to identify the optimal alignment positions and motifs.
 
 A brief description of the five classes within 'em_oop/main.py':
-1. EM_Input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.  Parent of all classes.
+1. EM_Input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.
 
-2. EM_Core: The first iteration or 'for' loop over the number of random alignments.  The entire program can be thought of as one gigantic, quintuple, nested 'for' loop.  Therefore, this is the 'nucleas' of the program.  Child of EM_Input.
+2. EM_Core: The first iteration or 'for' loop over the number of random alignments.  The entire program can be thought of as one gigantic, quintuple, nested 'for' loop.  Therefore, this is the 'nucleas' of the program.
 
-3. EM_Count: Performs all counting operations regarding bases, motifs, and normalization.  Child of EM_Core.
+3. EM_Count: Performs all counting operations regarding bases, motifs, and normalization.
 
 4. EM_Matrix: Consists of the first Expectation Step with the end goal of generating the log odds matrix.  Child of EM_Count.
 
