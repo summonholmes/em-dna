@@ -1,6 +1,6 @@
 from class_EM_Count import EM_Count
 from math import log
-from numpy import ones, zeros
+from numpy import ones, round, vectorize
 
 
 class EM_Matrix(EM_Count):
@@ -10,52 +10,48 @@ class EM_Matrix(EM_Count):
         self.fasta_file_seqs = fasta_file_seqs
         self.count_bkgd_bases_dict = count_bkgd_bases_dict
         self.motif_base_posit_freq_dict = motif_base_posit_freq_dict
-        self.init_freq_odds_matrices()
+        self.init_freq_matrix()
         self.counts_matrix_populate()
         self.freq_matrix_convert_bgs()
         self.freq_matrix_convert_cols()
         self.odds_matrix_populate()
         self.odds_matrix_to_log()
 
-    def init_freq_odds_matrices(self):
+    def init_freq_matrix(self):
         self.em_freq_matrix = ones((4,
                                     self.motif_width + 1))  # For pseudocounts
-        self.em_log_odds_matrix = zeros((4, self.motif_width))
 
-    def counts_matrix_populate(self):
-        for i in range(len(self.fasta_file_seqs)):
-            for j in range(self.motif_width):
-                for k in range(4):
-                    self.em_freq_matrix[k][0] = list(  # bgs in 1st column
-                        self.count_bkgd_bases_dict.values())[k]
-                    if list(self.motif_base_posit_freq_dict.values())[k][i][
-                            j] == j + 1:  # This is the posit of the element after normalization
-                        self.em_freq_matrix[k][
-                            j + 1] += 1  # Counter, always offset to avoid bkgd
+    def counts_matrix_populate(self):  # Vectorize rather than iterate!
+        self.em_freq_matrix[:, 0] = list(
+            self.count_bkgd_bases_dict.values())  # By Column
+        self.em_freq_matrix[0, 1:] = self.motif_base_posit_freq_dict[
+            "motif_posits_a"]  # By Row
+        self.em_freq_matrix[1, 1:] = self.motif_base_posit_freq_dict[
+            "motif_posits_c"]  # By Row
+        self.em_freq_matrix[2, 1:] = self.motif_base_posit_freq_dict[
+            "motif_posits_t"]  # By Row
+        self.em_freq_matrix[3, 1:] = self.motif_base_posit_freq_dict[
+            "motif_posits_g"]  # By Row
 
     def freq_matrix_convert_bgs(self):
-        for i in range(4):
-            self.em_freq_matrix[i][0] = round(
-                list(self.count_bkgd_bases_dict.values())[i] / sum(
-                    list(self.count_bkgd_bases_dict.values())), 3)
+        self.em_freq_matrix[:, 0] = round(  # By Column
+            (self.em_freq_matrix[:, 0] / sum(self.em_freq_matrix[:, 0])),
+            decimals=3)
 
     def freq_matrix_convert_cols(self):
         col_totals = [sum(i) for i in zip(*self.em_freq_matrix)]
-        for i in range(4):
-            for j in range(1, self.motif_width + 1):  # Offset again
-                self.em_freq_matrix[i][
-                    j] = self.em_freq_matrix[i][j] / col_totals[j]
-                self.em_freq_matrix[i][j] = round(self.em_freq_matrix[i][j], 3)
+        for i in range(1, self.motif_width + 1):
+            self.em_freq_matrix[:, i] = round(  # By Column
+                (self.em_freq_matrix[:, i] / col_totals[i]),
+                decimals=3)
 
     def odds_matrix_populate(self):  # odds matrix is NOT offset!
+        self.em_log_odds_matrix = self.em_freq_matrix[:, 1:].copy()
         for i in range(4):
-            for j in range(self.motif_width):
-                self.em_log_odds_matrix[i][j] = round(
-                    self.em_freq_matrix[i][j + 1] / self.em_freq_matrix[i][0],
-                    3)
+            self.em_log_odds_matrix[i, :] = round(  # By Row
+                (self.em_log_odds_matrix[i, :] / self.em_freq_matrix[i][0]),
+                decimals=3)  # Odds of getting each base in each position
 
     def odds_matrix_to_log(self):
-        for i in range(4):
-            for j in range(self.motif_width):
-                self.em_log_odds_matrix[i][j] = round(
-                    log(self.em_log_odds_matrix[i][j], 2), 3)
+        logger = vectorize(lambda x: round(log(x, 2), decimals=3))
+        self.em_log_odds_matrix = logger(self.em_log_odds_matrix)

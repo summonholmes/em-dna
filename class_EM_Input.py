@@ -10,42 +10,44 @@ class EM_Input:
         self.input_start_fasta()
 
     def input_start_motif_width(self):
-        self.motif_width = self.check_if_int(
-            input("Please specify the width of the motif: "))
+        # self.motif_width = self.check_if_int(
+        #     input("Please specify the width of the motif: "))
+        self.motif_width = 6
 
     def input_start_align(self):
-        input_rand_starting_aligns = self.check_if_int(
-            input(
-                "Use 50 initial rand starting aligns? ('1' for yes or '0' for no): "
-            ))
-        if input_rand_starting_aligns == 1:
-            self.total_rand_aligns = 50
-        elif input_rand_starting_aligns == 0:
-            self.total_rand_aligns = self.check_if_int(
-                input(
-                    "Please specify a value for the initial rand starting aligns: "
-                ))
-        else:
-            print("Unknown option.  Now exiting")
-            exit(0)
+        # input_rand_starting_aligns = self.check_if_int(
+        #     input(
+        #         "Use 50 initial rand starting aligns? ('1' for yes or '0' for no): "
+        #     ))
+        # if input_rand_starting_aligns == 1:
+        self.total_rand_aligns = 50
+        # elif input_rand_starting_aligns == 0:
+        #     self.total_rand_aligns = self.check_if_int(
+        #         input(
+        #             "Please specify a value for the initial rand starting aligns: "
+        #         ))
+        # else:
+        #     print("Unknown option.  Now exiting")
+        #     exit(0)
 
     def input_start_iter(self):
-        input_total_em_iters = self.check_if_int(
-            input(
-                "Use 500 iters to perform the E-M steps? ('1' for yes or '0' for no): "
-            ))
-        if input_total_em_iters == 1:
-            self.total_em_iters = 500
-        elif input_total_em_iters == 0:
-            self.total_em_iters = self.check_if_int(
-                input("Please specify a value for the number of iters: "))
-        else:
-            print("Unknown option.  Now exiting")
-            exit(0)
+        # input_total_em_iters = self.check_if_int(
+        #     input(
+        #         "Use 500 iters to perform the E-M steps? ('1' for yes or '0' for no): "
+        #     ))
+        # if input_total_em_iters == 1:
+        self.total_em_iters = 50
+        # elif input_total_em_iters == 0:
+        #     self.total_em_iters = self.check_if_int(
+        #         input("Please specify a value for the number of iters: "))
+        # else:
+        #     print("Unknown option.  Now exiting")
+        #     exit(0)
 
     def input_start_fasta(self):
-        input_user_fasta_path = input(
-            "Please specify the path of the fasta file: ")
+        # input_user_fasta_path = input(
+        #     "Please specify the path of the fasta file: ")
+        input_user_fasta_path = "example.fasta"
         self.check_if_fasta(input_user_fasta_path)
 
     def check_if_int(self, int_return):
