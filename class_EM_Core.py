@@ -1,6 +1,8 @@
 from class_EM_Count import EM_Count
 from class_EM_Matrix import EM_Matrix
 from class_EM_Run import EM_Run
+from math import log
+from numpy import round, vectorize
 
 
 class EM_Core:
@@ -14,7 +16,8 @@ class EM_Core:
         self.iterate_over_total_rand_aligns()
 
     def iterate_over_total_rand_aligns(self):
-        for i in range(self.total_rand_aligns):
+        for i in range(
+                self.total_rand_aligns):  # Encompasses the rest of the program
             print(
                 "Progress: {:2.1%}".format((i + 1) / self.total_rand_aligns),
                 end="\r")
@@ -27,4 +30,5 @@ class EM_Core:
             self.em_run_obj = EM_Run(self.total_em_iters, self.fasta_file_seqs,
                                      self.motif_width,
                                      self.em_matrix_obj.em_log_odds_matrix)
-            self.total_records.append(self.em_run_obj.best_results)
+            self.total_records.append(self.em_run_obj.best_results
+                                      )  # Record best results of each round

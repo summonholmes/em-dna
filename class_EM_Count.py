@@ -17,12 +17,12 @@ class EM_Count:
 
     def init_rand_motif_posits(self):
         seed(a=123)
+        self.len_all_seqs = [len(i) for i in self.fasta_file_seqs]
         self.motif_start_posits = [
-            randint(0, (j - self.motif_width))
-            for j in [len(i) for i in self.fasta_file_seqs]
-        ]
+            randint(0, (j - self.motif_width)) for j in self.len_all_seqs
+        ]  # Starting positions are always random
 
-    def init_total_base_counts_dict(self):  # First matrix dict
+    def init_total_base_counts_dict(self):
         self.total_count_all_bases_dict = {
             "total_count_a": 0,
             "total_count_c": 0,
@@ -31,18 +31,18 @@ class EM_Count:
         }
 
     def count_all_bases(self):
-        all_bases = "".join(self.fasta_file_seqs)
-        self.total_count_all_bases_dict["total_count_a"] += all_bases.count(
-            'A')
-        self.total_count_all_bases_dict["total_count_c"] += all_bases.count(
-            'C')
-        self.total_count_all_bases_dict["total_count_t"] += all_bases.count(
-            'T')
-        self.total_count_all_bases_dict["total_count_g"] += all_bases.count(
-            'G')
+        self.all_bases = "".join(self.fasta_file_seqs)
+        self.total_count_all_bases_dict[
+            "total_count_a"] += self.all_bases.count('A')
+        self.total_count_all_bases_dict[
+            "total_count_c"] += self.all_bases.count('C')
+        self.total_count_all_bases_dict[
+            "total_count_t"] += self.all_bases.count('T')
+        self.total_count_all_bases_dict[
+            "total_count_g"] += self.all_bases.count('G')
 
     def init_motifs_list(self):
-        self.initial_rand_motifs_list = list(
+        self.initial_rand_motifs_list = list(  # Isolate motifs
             map(lambda x, y: x[y:y + self.motif_width], self.fasta_file_seqs,
                 self.motif_start_posits))
 
@@ -52,31 +52,30 @@ class EM_Count:
             "bkgd_c": self.total_count_all_bases_dict["total_count_c"],
             "bkgd_t": self.total_count_all_bases_dict["total_count_t"],
             "bkgd_g": self.total_count_all_bases_dict["total_count_g"]
-        }
+        }  # All bases minus those contained in any motif
 
     def count_all_bkgd_bases(self):  # Last integer dict
-        all_motif_bases = "".join(self.initial_rand_motifs_list)
-        self.count_bkgd_bases_dict["bkgd_a"] -= all_motif_bases.count('A')
-        self.count_bkgd_bases_dict["bkgd_c"] -= all_motif_bases.count('C')
-        self.count_bkgd_bases_dict["bkgd_t"] -= all_motif_bases.count('T')
-        self.count_bkgd_bases_dict["bkgd_g"] -= all_motif_bases.count('G')
+        self.all_motif_bases = "".join(self.initial_rand_motifs_list)
+        self.count_bkgd_bases_dict["bkgd_a"] -= self.all_motif_bases.count('A')
+        self.count_bkgd_bases_dict["bkgd_c"] -= self.all_motif_bases.count('C')
+        self.count_bkgd_bases_dict["bkgd_t"] -= self.all_motif_bases.count('T')
+        self.count_bkgd_bases_dict["bkgd_g"] -= self.all_motif_bases.count('G')
 
     def init_motif_base_posit_freq_dict(self):  # Now move to matrix dicts
-        self.motif_base_posit_freq_dict = {  # Ones address pseudocounts
+        self.motif_base_posit_freq_dict = {
             "motif_posits_a": ones(self.motif_width),
             "motif_posits_c": ones(self.motif_width),
             "motif_posits_t": ones(self.motif_width),
             "motif_posits_g": ones(self.motif_width)
-        }
+        }  # 1s address normalization/pseudocounts, exp-fxn does not work with 0s
 
-    def motif_base_posit_freq_dict_populate(self):  # Count motif positions
-        all_motif_bases = "".join(self.initial_rand_motifs_list)
-        for j in range(self.motif_width):
+    def motif_base_posit_freq_dict_populate(self):
+        for j in range(self.motif_width):  # Count bases in all motif positions
             self.motif_base_posit_freq_dict["motif_posits_a"][
-                j] += all_motif_bases[j::self.motif_width].count('A')
+                j] += self.all_motif_bases[j::self.motif_width].count('A')
             self.motif_base_posit_freq_dict["motif_posits_c"][
-                j] += all_motif_bases[j::self.motif_width].count('C')
+                j] += self.all_motif_bases[j::self.motif_width].count('C')
             self.motif_base_posit_freq_dict["motif_posits_t"][
-                j] += all_motif_bases[j::self.motif_width].count('T')
+                j] += self.all_motif_bases[j::self.motif_width].count('T')
             self.motif_base_posit_freq_dict["motif_posits_g"][
-                j] += all_motif_bases[j::self.motif_width].count('G')
+                j] += self.all_motif_bases[j::self.motif_width].count('G')

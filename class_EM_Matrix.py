@@ -1,6 +1,6 @@
 from class_EM_Count import EM_Count
 from math import log
-from numpy import ones, round, vectorize
+from numpy import empty, round, vectorize
 
 
 class EM_Matrix(EM_Count):
@@ -18,8 +18,8 @@ class EM_Matrix(EM_Count):
         self.odds_matrix_to_log()
 
     def init_em_matrix(self):
-        self.em_log_odds_matrix = ones(
-            (4, self.motif_width + 1))  # For pseudocounts
+        self.em_log_odds_matrix = empty(  # Will be overwritten
+            (4, self.motif_width + 1))
 
     def counts_matrix_populate(self):  # Vectorize rather than iterate!
         self.em_log_odds_matrix[:, 0] = list(
@@ -46,7 +46,7 @@ class EM_Matrix(EM_Count):
                 (self.em_log_odds_matrix[:, i] / col_totals[i]),
                 decimals=3)
 
-    def odds_matrix_populate(self):  # odds matrix is NOT offset!
+    def odds_matrix_populate(self):
         for i in range(4):
             self.em_log_odds_matrix[i, 1:] = round(  # By Row
                 (self.em_log_odds_matrix[i, 1:] /
@@ -55,4 +55,5 @@ class EM_Matrix(EM_Count):
 
     def odds_matrix_to_log(self):
         logger = vectorize(lambda x: round(log(x, 2), decimals=3))
-        self.em_log_odds_matrix = logger(self.em_log_odds_matrix[:, 1:])
+        self.em_log_odds_matrix = logger(
+            self.em_log_odds_matrix[:, 1:])  # log-odds matrix is NOT offset!

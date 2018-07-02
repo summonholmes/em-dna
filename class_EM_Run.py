@@ -1,7 +1,8 @@
 from class_EM_Matrix import EM_Matrix
+from numpy import chararray
 
 
-class EM_Run(EM_Matrix):
+class EM_Run(EM_Matrix):  # Still working on this class
     def __init__(self, total_em_iters, fasta_file_seqs, motif_width,
                  em_log_odds_matrix):
         self.total_em_iters = total_em_iters
@@ -15,19 +16,17 @@ class EM_Run(EM_Matrix):
         self.em_best_result()
 
     def init_em_motifs(self):  # Every possibility generated
-        self.em_motifs = []
-        for i in self.fasta_file_seqs:
-            tmp = []
-            for j in range(len(i) - self.motif_width):
-                tmp.append(i[j:j + self.motif_width])
-            self.em_motifs.append(tmp)
+        self.em_motifs = [[
+            i[j:j + self.motif_width]
+            for j in range(len(i) - self.motif_width)
+        ] for i in self.fasta_file_seqs]
 
     def init_max_likely_dict(self):
-        self.max_likely_dict = {  # Preallocate
+        self.max_likely_dict = {  # Preallocate, try and change
             "max_scores_matrix": [[] for i in range(self.total_em_iters)],
             "max_posits_matrix": [[] for i in range(self.total_em_iters)],
             "max_motifs_matrix": [[] for i in range(self.total_em_iters)]
-        }
+        }  # Deep copies are actually slower
 
     def em_start_scoring(self):
         for i in range(self.total_em_iters):
