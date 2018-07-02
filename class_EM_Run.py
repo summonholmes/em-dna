@@ -82,7 +82,7 @@ class EM_Run(EM_Matrix):
         self.count_all_bkgd_bases()
         self.init_motif_base_posit_freq_dict()
         self.motif_base_posit_freq_dict_populate()
-        self.init_freq_matrix()
+        self.init_em_matrix()
         self.counts_matrix_populate()
         self.freq_matrix_convert_bgs()
         self.freq_matrix_convert_cols()

@@ -31,15 +31,15 @@ class EM_Count:
         }
 
     def count_all_bases(self):
-        for each_seq in self.fasta_file_seqs:
-            self.total_count_all_bases_dict["total_count_a"] += each_seq.count(
-                'A')
-            self.total_count_all_bases_dict["total_count_c"] += each_seq.count(
-                'C')
-            self.total_count_all_bases_dict["total_count_t"] += each_seq.count(
-                'T')
-            self.total_count_all_bases_dict["total_count_g"] += each_seq.count(
-                'G')
+        all_bases = "".join(self.fasta_file_seqs)
+        self.total_count_all_bases_dict["total_count_a"] += all_bases.count(
+            'A')
+        self.total_count_all_bases_dict["total_count_c"] += all_bases.count(
+            'C')
+        self.total_count_all_bases_dict["total_count_t"] += all_bases.count(
+            'T')
+        self.total_count_all_bases_dict["total_count_g"] += all_bases.count(
+            'G')
 
     def init_motifs_list(self):
         self.initial_rand_motifs_list = list(
@@ -55,11 +55,11 @@ class EM_Count:
         }
 
     def count_all_bkgd_bases(self):  # Last integer dict
-        for each_motif in self.initial_rand_motifs_list:
-            self.count_bkgd_bases_dict["bkgd_a"] -= each_motif.count('A')
-            self.count_bkgd_bases_dict["bkgd_c"] -= each_motif.count('C')
-            self.count_bkgd_bases_dict["bkgd_t"] -= each_motif.count('T')
-            self.count_bkgd_bases_dict["bkgd_g"] -= each_motif.count('G')
+        all_motif_bases = "".join(self.initial_rand_motifs_list)
+        self.count_bkgd_bases_dict["bkgd_a"] -= all_motif_bases.count('A')
+        self.count_bkgd_bases_dict["bkgd_c"] -= all_motif_bases.count('C')
+        self.count_bkgd_bases_dict["bkgd_t"] -= all_motif_bases.count('T')
+        self.count_bkgd_bases_dict["bkgd_g"] -= all_motif_bases.count('G')
 
     def init_motif_base_posit_freq_dict(self):  # Now move to matrix dicts
         self.motif_base_posit_freq_dict = {  # Ones address pseudocounts
@@ -70,13 +70,13 @@ class EM_Count:
         }
 
     def motif_base_posit_freq_dict_populate(self):  # Count motif positions
-        for each_motif in self.initial_rand_motifs_list:
-            for j in range(self.motif_width):
-                self.motif_base_posit_freq_dict["motif_posits_a"][
-                    j] += each_motif[j].count('A')
-                self.motif_base_posit_freq_dict["motif_posits_c"][
-                    j] += each_motif[j].count('C')
-                self.motif_base_posit_freq_dict["motif_posits_t"][
-                    j] += each_motif[j].count('T')
-                self.motif_base_posit_freq_dict["motif_posits_g"][
-                    j] += each_motif[j].count('G')
+        all_motif_bases = "".join(self.initial_rand_motifs_list)
+        for j in range(self.motif_width):
+            self.motif_base_posit_freq_dict["motif_posits_a"][
+                j] += all_motif_bases[j::self.motif_width].count('A')
+            self.motif_base_posit_freq_dict["motif_posits_c"][
+                j] += all_motif_bases[j::self.motif_width].count('C')
+            self.motif_base_posit_freq_dict["motif_posits_t"][
+                j] += all_motif_bases[j::self.motif_width].count('T')
+            self.motif_base_posit_freq_dict["motif_posits_g"][
+                j] += all_motif_bases[j::self.motif_width].count('G')
