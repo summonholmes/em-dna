@@ -10,7 +10,7 @@ The Expectation (E) step composes the majority of source code.  Total positional
 A brief description of the five classes:
 1. EM_Input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.  This class had an interactive mode which is commented out.  The defaults include a motif width of 6, 50 total random alignments, and 50 iterations.
 
-2. EM_Core: The first iteration or 'for' loop over the number of random alignments.  Previously, the entire program could be thought of as one gigantic, quintuple, nested 'for' loop.  However, this approach has been reduced to a triple for loop via numpy vectorization and indexing.  This is the 'nucleas' of the program, which encompasses the entire EM process and iterates for the specified number of total random alignments.
+2. EM_Core: The first iteration or 'for' loop over the number of random alignments.  Previously, the entire program could be thought of as one gigantic, quintuple, nested 'for' loop.  However, this approach has been reduced to a triple 'for' loop via numpy vectorization and indexing.  This is the 'nucleas' of the program, which encompasses the entire EM process and iterates for the specified number of total random alignments.
 
 3. EM_Count: Performs all counting operations regarding bases, motifs, and normalization.  The only area where looping occurs is over the motif width when storing positional counts.  The rest of this class aims to be as Pythonic and vectorized as possible.
 
