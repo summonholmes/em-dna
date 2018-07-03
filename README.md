@@ -1,22 +1,22 @@
 # em-algorithm-python
-This is the Expectation-Maximization (EM) algorithm performed on multiple DNA sequences.  As a latent variable model, the EM algorithm is an example of unsupervised learning.  The primary objective of this program is to discover optimal alignment positions and motifs for multiple DNA sequences.  
+This is the Expectation-Maximization (EM) algorithm performed on multiple DNA sequences.  As a latent variable model, the EM algorithm is an example of unsupervised learning.  The primary objectives of this program are to discover optimal alignment positions and motifs for multiple DNA sequences; and to provide a clear, efficient EM implementation.  
 
-Optimal alignment positions and motifs are the latent variables requiring detection; meaning that they are known to exist, are known to possess high importance, but are unable to be identified directly.  
+Optimal alignment positions and motifs are the latent variables requiring detection; meaning that they are known to exist, are known to possess high importance, but are unable to be identified directly.
 
 Since the starting positions of the DNA motifs are always randomized, no two runs are ever alike.  However, when provided the same input more than once, the program results are (almost) always the same.
 
-The Expectation Step composes the vast majority of program code.  Construction of the log-likelihood function is performed matrix-by-matrix, requiring more preparation.  The Maximization Step scores on the log-likelihood function derived from the previous Expectation Step.  Using the maximum score plus the current information about optimal positions and motifs, the Expectation and Maximization Steps are repeated X number of times.  After enough iterations, convergence occurs to identify the optimal alignment positions and motifs.
+The Expectation (E) step composes the majority of source code.  Total positional counts, frequencies, odds, then log-odds calculations compose the E step and derive the log-likelihood function.  The Maximization Step scores on the log-likelihood function derived from the previous Expectation Step.  Taking the score for every possible contiguous motif, for each sequence, the motif positions that generate the maximum scores on each sequence are identified, and become the input of the next E step.  The Expectation and Maximization Steps are then repeated X number of times.  After enough iterations, convergence occurs to identify the optimal alignment positions and motifs.
 
-A brief description of the five classes within 'em_oop/main.py':
-1. EM_Input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.
+A brief description of the five classes:
+1. EM_Input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.  This class had an interactive mode which is commented out.  The defaults include a motif width of 6, 50 total random alignments, and 50 iterations.
 
-2. EM_Core: The first iteration or 'for' loop over the number of random alignments.  The entire program can be thought of as one gigantic, quintuple, nested 'for' loop.  Therefore, this is the 'nucleas' of the program.
+2. EM_Core: The first iteration or 'for' loop over the number of random alignments.  Previously, the entire program could be thought of as one gigantic, quintuple, nested 'for' loop.  However, this approach has been reduced to a triple for loop via numpy vectorization and indexing.  This is the 'nucleas' of the program, which encompasses the entire EM process and iterates for the specified number of total random alignments.
 
-3. EM_Count: Performs all counting operations regarding bases, motifs, and normalization.
+3. EM_Count: Performs all counting operations regarding bases, motifs, and normalization.  The only area where looping occurs is over the motif width when storing positional counts.  The rest of this class aims to be as Pythonic and vectorized as possible.
 
-4. EM_Matrix: Consists of the first Expectation Step with the end goal of generating the log odds matrix.  Child of EM_Count.
+4. EM_Matrix: Consists of the E step, and generates the log odds matrix for the M step.  Numpy matrices are preferred here for their vector capabilities.  Child of EM_Count.
 
-5. EM_Run: Consists of remaining four inner layers of the 'for' loop from EM_Core.  Maximization is performed, scores are calculated against the log odds matrix, and the entire process repeats to convergence.  Note that the function 'exp_max_update_log_odds' is the entire Expectation Step and recycles all functions from EM_Count & EM_Matrix.  Child of EM_Matrix.
+5. EM_Run: Consists of remaining inner two 'for' loops from mentioned above in EM_Core, and the M step.  Scores are calculated using a numpy character array for each motif and the log odds matrix.  The entire process repeats to convergence, and the final results are printed in 'main.py'.  Note that the function 'update_log_odds' is the entire Expectation Step and recycles all functions from EM_Count & EM_Matrix.  Child of EM_Matrix.
 
 ## Getting Started
 The program requires few dependences and should be trivial to set up.  However, an in-depth understanding of the EM algorithm requires some knowledge of bioinformatics, data science, and machine learning.
