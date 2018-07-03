@@ -1,5 +1,5 @@
 from class_EM_Matrix import EM_Matrix
-from numpy import array, empty, select, power
+from numpy import array, select, power
 
 
 class EM_Run(EM_Matrix):  # Still working on this class

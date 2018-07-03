@@ -16,10 +16,10 @@ class EM_Count:
         self.motif_base_posit_freq_dict_populate()
 
     def init_rand_motif_posits(self):
-        seed(a=123)
-        self.len_all_seqs = [len(i) for i in self.fasta_file_seqs]
+        seed(a=None)
         self.motif_start_posits = [
-            randint(0, (j - self.motif_width)) for j in self.len_all_seqs
+            randint(0, (j - self.motif_width))
+            for j in [len(i) for i in self.fasta_file_seqs]
         ]  # Starting positions are always random
 
     def init_total_base_counts_dict(self):
@@ -31,15 +31,15 @@ class EM_Count:
         }
 
     def count_all_bases(self):
-        self.all_bases = "".join(self.fasta_file_seqs)
+        all_bases = "".join(self.fasta_file_seqs)
         self.total_count_all_bases_dict[
-            "total_count_a"] += self.all_bases.count('A')
+            "total_count_a"] += all_bases.count('A')
         self.total_count_all_bases_dict[
-            "total_count_c"] += self.all_bases.count('C')
+            "total_count_c"] += all_bases.count('C')
         self.total_count_all_bases_dict[
-            "total_count_t"] += self.all_bases.count('T')
+            "total_count_t"] += all_bases.count('T')
         self.total_count_all_bases_dict[
-            "total_count_g"] += self.all_bases.count('G')
+            "total_count_g"] += all_bases.count('G')
 
     def init_motifs_list(self):
         self.initial_rand_motifs_list = list(  # Isolate motifs

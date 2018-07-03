@@ -1,8 +1,6 @@
 from class_EM_Count import EM_Count
 from class_EM_Matrix import EM_Matrix
 from class_EM_Run import EM_Run
-from math import log
-from numpy import round, vectorize
 
 
 class EM_Core:
