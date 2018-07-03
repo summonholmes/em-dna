@@ -1,5 +1,5 @@
 from class_EM_Matrix import EM_Matrix
-from numpy import chararray
+from numpy import array, empty, select, power
 
 
 class EM_Run(EM_Matrix):  # Still working on this class
@@ -16,10 +16,12 @@ class EM_Run(EM_Matrix):  # Still working on this class
         self.em_best_result()
 
     def init_em_motifs(self):  # Every possibility generated
-        self.em_motifs = [[
-            i[j:j + self.motif_width]
-            for j in range(len(i) - self.motif_width)
-        ] for i in self.fasta_file_seqs]
+        self.em_motifs = [
+            array([  # Numpy character array required
+                list(i[j:j + self.motif_width])
+                for j in range(len(i) - self.motif_width)
+            ]) for i in self.fasta_file_seqs
+        ]
 
     def init_max_likely_dict(self):
         self.max_likely_dict = {  # Preallocate, try and change
@@ -28,49 +30,23 @@ class EM_Run(EM_Matrix):  # Still working on this class
             "max_motifs_matrix": [[] for i in range(self.total_em_iters)]
         }  # Deep copies are actually slower
 
-    def em_start_scoring(self):
+    def em_start_scoring(self):  # Vectorized code is key
         for i in range(self.total_em_iters):
-            for j in self.fasta_file_seqs:
-                last_motif_posit = len(j) - self.motif_width
-                max_likely_iter_dict = self.em_score_posits(  # Temporarily store each iteration
-                    self.fasta_file_seqs.index(j), -1, -1,
-                    last_motif_posit)  # -1s so scoring works
-                self.update_max_likely_dict(max_likely_iter_dict, i, j)
+            choice_list = [i for i in self.em_log_odds_matrix]
+            for motif_set in self.em_motifs:
+                cond_list = [
+                    motif_set == 'A', motif_set == 'C', motif_set == 'T',
+                    motif_set == 'G'
+                ]  # This replaces if/else only iterates per sequence
+                score = power(2, select(cond_list, choice_list).sum(axis=1))
+                self.update_max_likely_dict(i, motif_set, score)
             self.update_log_odds(self.max_likely_dict["max_posits_matrix"][i])
 
-    def em_score_posits(self, j, max_score, max_pos, last_motif_posit):
-        for k in range(last_motif_posit):
-            score_em_motif = self.em_log_odds(list(self.em_motifs[j][k]), [])
-            sum_score_em_motif = sum(score_em_motif)
-            power_score_em_motif = round(pow(2, sum_score_em_motif), 3)
-            if power_score_em_motif > max_score:  # Local to the current motif
-                max_posit = k
-                max_score = power_score_em_motif
-        return {"max_posit": max_posit, "max_score": max_score}
-
-    def em_log_odds(self, list_em_motif, score_em_motif):
-        for l in range(self.motif_width):
-            if list_em_motif[l] == 'A':
-                score_em_motif.append(self.em_log_odds_matrix[0][l])
-            elif list_em_motif[l] == 'C':
-                score_em_motif.append(self.em_log_odds_matrix[1][l])
-            elif list_em_motif[l] == 'T':
-                score_em_motif.append(self.em_log_odds_matrix[2][l])
-            elif list_em_motif[l] == 'G':
-                score_em_motif.append(self.em_log_odds_matrix[3][l])
-            else:
-                print("An error occurred in exp_max")
-                exit(0)
-        return score_em_motif
-
-    def update_max_likely_dict(self, max_likely_iter_dict, i, j):
-        self.max_likely_dict["max_scores_matrix"][i].append(
-            max_likely_iter_dict["max_score"])
-        self.max_likely_dict["max_posits_matrix"][i].append(
-            max_likely_iter_dict["max_posit"])
-        self.max_likely_dict["max_motifs_matrix"][i].append(
-            j[max_likely_iter_dict["max_posit"]:(
-                max_likely_iter_dict["max_posit"] + self.motif_width)])
+    def update_max_likely_dict(self, i, motif_set, score):
+        self.max_likely_dict["max_scores_matrix"][i].append(max(score))
+        self.max_likely_dict["max_posits_matrix"][i].append(score.argmax())
+        self.max_likely_dict["max_motifs_matrix"][i].append(''.join(
+            motif_set[score.argmax()]))
 
     def update_log_odds(self, updated_max_posits):  # The ML magic
         self.motif_start_posits = updated_max_posits
