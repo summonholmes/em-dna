@@ -15,38 +15,38 @@ class EM_Run(EM_Matrix):  # Still working on this class
         self.em_finalize()
         self.em_best_result()
 
-    def init_em_motifs(self):  # Every possibility generated
+    def init_em_motifs(self):  # Every contiguous motif
         self.em_motifs = [
-            array([  # Numpy character array required
+            array([  # Numpy character array
                 list(i[j:j + self.motif_width])
                 for j in range(len(i) - self.motif_width)
             ]) for i in self.fasta_file_seqs
         ]
 
     def init_max_likely_dict(self):
-        self.max_likely_dict = {  # Preallocate, try and change
+        self.max_likely_dict = {  # Preallocate standard arrays
             "max_scores_matrix": [[] for i in range(self.total_em_iters)],
             "max_posits_matrix": [[] for i in range(self.total_em_iters)],
             "max_motifs_matrix": [[] for i in range(self.total_em_iters)]
-        }  # Deep copies are actually slower
+        }
 
     def em_start_scoring(self):  # Vectorized code is key
         for i in range(self.total_em_iters):
-            choice_list = [i for i in self.em_log_odds_matrix]
             for motif_set in self.em_motifs:
-                cond_list = [
-                    motif_set == 'A', motif_set == 'C', motif_set == 'T',
-                    motif_set == 'G'
-                ]  # This replaces if/else only iterates per sequence
-                score = power(2, select(cond_list, choice_list).sum(axis=1))
+                score = power(
+                    2,  # Numpy select replaces for/if/else
+                    select([
+                        motif_set == 'A', motif_set == 'C', motif_set == 'T',
+                        motif_set == 'G'
+                    ], self.em_log_odds_matrix).sum(axis=1))
                 self.update_max_likely_dict(i, motif_set, score)
             self.update_log_odds(self.max_likely_dict["max_posits_matrix"][i])
 
     def update_max_likely_dict(self, i, motif_set, score):
         self.max_likely_dict["max_scores_matrix"][i].append(max(score))
         self.max_likely_dict["max_posits_matrix"][i].append(score.argmax())
-        self.max_likely_dict["max_motifs_matrix"][i].append(''.join(
-            motif_set[score.argmax()]))
+        self.max_likely_dict["max_motifs_matrix"][i].append(
+            ''.join(motif_set[score.argmax()]))  # Convert motif back to string
 
     def update_log_odds(self, updated_max_posits):  # The ML magic
         self.motif_start_posits = updated_max_posits
@@ -67,7 +67,7 @@ class EM_Run(EM_Matrix):  # Still working on this class
     def em_finalize(self):
         self.final_scores_dict = {
             "final_score": max(self.max_likely_dict["max_scores_matrix"][-1])
-        }  # Update by indexing
+        }  # Update by indexing with last position/last iteration
         self.final_scores_dict["final_seq"] = self.max_likely_dict[
             "max_scores_matrix"][-1].index(
                 self.final_scores_dict["final_score"])
@@ -78,7 +78,7 @@ class EM_Run(EM_Matrix):  # Still working on this class
         self.final_scores_dict["final_sum_scores"] = sum(
             self.max_likely_dict["max_scores_matrix"][-1])
 
-    def em_best_result(self):  # Still local to em_core for loop
+    def em_best_result(self):  # Last fxn within the em_core for loop
         for i in self.max_likely_dict.keys():
             self.max_likely_dict[i] = self.max_likely_dict[i][-1]
         self.best_results = {

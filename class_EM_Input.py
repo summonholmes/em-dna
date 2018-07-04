@@ -1,7 +1,7 @@
 from Bio import SeqIO
 
 
-class EM_Input:
+class EM_Input:  # Commented out interactiveness
     def __init__(self):
         self.fasta_file_seqs = []
         self.input_start_motif_width()

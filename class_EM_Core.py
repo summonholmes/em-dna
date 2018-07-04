@@ -14,8 +14,8 @@ class EM_Core:
         self.iterate_over_total_rand_aligns()
 
     def iterate_over_total_rand_aligns(self):
-        for i in range(
-                self.total_rand_aligns):  # Encompasses the rest of the program
+        for i in range(  # Encompasses the rest of the program
+                self.total_rand_aligns):
             print(
                 "Progress: {:2.1%}".format((i + 1) / self.total_rand_aligns),
                 end="\r")

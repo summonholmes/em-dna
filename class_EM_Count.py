@@ -30,16 +30,16 @@ class EM_Count:
             "total_count_g": 0
         }
 
-    def count_all_bases(self):
+    def count_all_bases(self): # Count all the bases
         all_bases = "".join(self.fasta_file_seqs)
-        self.total_count_all_bases_dict[
-            "total_count_a"] += all_bases.count('A')
-        self.total_count_all_bases_dict[
-            "total_count_c"] += all_bases.count('C')
-        self.total_count_all_bases_dict[
-            "total_count_t"] += all_bases.count('T')
-        self.total_count_all_bases_dict[
-            "total_count_g"] += all_bases.count('G')
+        self.total_count_all_bases_dict["total_count_a"] += all_bases.count(
+            'A')
+        self.total_count_all_bases_dict["total_count_c"] += all_bases.count(
+            'C')
+        self.total_count_all_bases_dict["total_count_t"] += all_bases.count(
+            'T')
+        self.total_count_all_bases_dict["total_count_g"] += all_bases.count(
+            'G')
 
     def init_motifs_list(self):
         self.initial_rand_motifs_list = list(  # Isolate motifs
@@ -54,14 +54,14 @@ class EM_Count:
             "bkgd_g": self.total_count_all_bases_dict["total_count_g"]
         }  # All bases minus those contained in any motif
 
-    def count_all_bkgd_bases(self):  # Last integer dict
+    def count_all_bkgd_bases(self):  # All bases not in motifs
         self.all_motif_bases = "".join(self.initial_rand_motifs_list)
         self.count_bkgd_bases_dict["bkgd_a"] -= self.all_motif_bases.count('A')
         self.count_bkgd_bases_dict["bkgd_c"] -= self.all_motif_bases.count('C')
         self.count_bkgd_bases_dict["bkgd_t"] -= self.all_motif_bases.count('T')
         self.count_bkgd_bases_dict["bkgd_g"] -= self.all_motif_bases.count('G')
 
-    def init_motif_base_posit_freq_dict(self):  # Now move to matrix dicts
+    def init_motif_base_posit_freq_dict(self):  # Now prep for counts matrix
         self.motif_base_posit_freq_dict = {
             "motif_posits_a": ones(self.motif_width),
             "motif_posits_c": ones(self.motif_width),
