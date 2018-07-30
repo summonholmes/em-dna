@@ -46,15 +46,15 @@ class EM_Run(EM_Matrix):  # The ML class
             self.update_max_likely_dict(i)
             self.update_log_odds(self.max_likely_dict["max_posits_matrix"][i])
 
-    def em_motifs_merge(self):
+    def em_motifs_merge(self):  # Converting to by-sequence format
         self.seq_lens = cumsum(
             [len(i) - self.motif_width for i in self.fasta_file_seqs])
         self.em_motifs_seq = [
-            array(self.em_motifs[pre:cur])
+            self.em_motifs[pre:cur]
             for pre, cur in self.prev_and_next(self.seq_lens)
         ]
         self.score = [
-            array(self.score[pre:cur])
+            self.score[pre:cur]
             for pre, cur in self.prev_and_next(self.seq_lens)
         ]
 
@@ -65,9 +65,9 @@ class EM_Run(EM_Matrix):  # The ML class
                 max(self.score[j]))
             self.max_likely_dict["max_posits_matrix"][i].append(
                 self.score[j].argmax())
-            self.max_likely_dict["max_motifs_matrix"][i].append(
-                ''.join(motif_set[self.score[j]
-                                  .argmax()]))  # Convert motif back to string
+            self.max_likely_dict["max_motifs_matrix"][i].append(''.join(
+                motif_set[self.score[j].argmax()]))
+        # Convert motif back to string
 
     def update_log_odds(self, updated_max_posits):  # The ML magic
         self.motif_start_posits = updated_max_posits

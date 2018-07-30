@@ -70,12 +70,12 @@ class EM_Count:
         }  # 1s address normalization/pseudocounts, exp-fxn does not work with 0s
 
     def motif_base_posit_freq_dict_populate(self):
-        for j in range(self.motif_width):  # Count bases in all motif positions
+        for i in range(self.motif_width):  # Count bases in all motif positions
             self.motif_base_posit_freq_dict["motif_posits_a"][
-                j] += self.all_motif_bases[j::self.motif_width].count('A')
+                i] += self.all_motif_bases[i::self.motif_width].count('A')
             self.motif_base_posit_freq_dict["motif_posits_c"][
-                j] += self.all_motif_bases[j::self.motif_width].count('C')
+                i] += self.all_motif_bases[i::self.motif_width].count('C')
             self.motif_base_posit_freq_dict["motif_posits_t"][
-                j] += self.all_motif_bases[j::self.motif_width].count('T')
+                i] += self.all_motif_bases[i::self.motif_width].count('T')
             self.motif_base_posit_freq_dict["motif_posits_g"][
-                j] += self.all_motif_bases[j::self.motif_width].count('G')
+                i] += self.all_motif_bases[i::self.motif_width].count('G')
