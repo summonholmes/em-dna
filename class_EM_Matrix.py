@@ -1,6 +1,6 @@
 from class_EM_Count import EM_Count
 from math import log
-from numpy import empty, vectorize
+from numpy import empty, log2
 
 
 class EM_Matrix(EM_Count):
@@ -51,6 +51,5 @@ class EM_Matrix(EM_Count):
             )  # Odds of getting each base in each position
 
     def odds_matrix_to_log(self):
-        logger = vectorize(lambda x: log(x, 2))
-        self.em_log_odds_matrix = logger(
+        self.em_log_odds_matrix = log2(
             self.em_log_odds_matrix[:, 1:])  # Log-odds matrix is NOT offset!

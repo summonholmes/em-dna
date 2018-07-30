@@ -30,7 +30,7 @@ class EM_Count:
             "total_count_g": 0
         }
 
-    def count_all_bases(self): # Count all the bases
+    def count_all_bases(self):  # Count all the bases
         all_bases = "".join(self.fasta_file_seqs)
         self.total_count_all_bases_dict["total_count_a"] += all_bases.count(
             'A')

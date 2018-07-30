@@ -1,8 +1,9 @@
 from class_EM_Matrix import EM_Matrix
-from numpy import array, select, power
+from itertools import tee, islice, chain
+from numpy import array, select, power, cumsum
 
 
-class EM_Run(EM_Matrix):  # Still working on this class
+class EM_Run(EM_Matrix):  # The ML class
     def __init__(self, total_em_iters, fasta_file_seqs, motif_width,
                  em_log_odds_matrix):
         self.total_em_iters = total_em_iters
@@ -15,13 +16,16 @@ class EM_Run(EM_Matrix):  # Still working on this class
         self.em_finalize()
         self.em_best_result()
 
+    def prev_and_next(self, iterable):
+        prevs, items = tee(iterable, 2)
+        prevs = chain([None], prevs)
+        return zip(prevs, items)  # Thx nosklo!
+
     def init_em_motifs(self):  # Every contiguous motif
-        self.em_motifs = [
-            array([  # Numpy character array
-                list(i[j:j + self.motif_width])
-                for j in range(len(i) - self.motif_width)
-            ]) for i in self.fasta_file_seqs
-        ]
+        self.em_motifs = array([
+            list(i[j:j + self.motif_width]) for i in self.fasta_file_seqs
+            for j in range(len(i) - self.motif_width)
+        ])
 
     def init_max_likely_dict(self):
         self.max_likely_dict = {  # Preallocate standard arrays
@@ -32,21 +36,38 @@ class EM_Run(EM_Matrix):  # Still working on this class
 
     def em_start_scoring(self):  # Vectorized code is key
         for i in range(self.total_em_iters):
-            for motif_set in self.em_motifs:
-                score = power(
-                    2,  # Numpy select replaces for/if/else
-                    select([
-                        motif_set == 'A', motif_set == 'C', motif_set == 'T',
-                        motif_set == 'G'
-                    ], self.em_log_odds_matrix).sum(axis=1))
-                self.update_max_likely_dict(i, motif_set, score)
+            # for motif_set in self.em_motifs:
+            self.score = power(
+                2,  # Numpy select replaces for/if/else
+                select([
+                    self.em_motifs == 'A', self.em_motifs == 'C',
+                    self.em_motifs == 'T', self.em_motifs == 'G'
+                ], self.em_log_odds_matrix).sum(axis=1))
+            self.update_max_likely_dict(i)
             self.update_log_odds(self.max_likely_dict["max_posits_matrix"][i])
 
-    def update_max_likely_dict(self, i, motif_set, score):
-        self.max_likely_dict["max_scores_matrix"][i].append(max(score))
-        self.max_likely_dict["max_posits_matrix"][i].append(score.argmax())
-        self.max_likely_dict["max_motifs_matrix"][i].append(
-            ''.join(motif_set[score.argmax()]))  # Convert motif back to string
+    def em_motifs_merge(self):
+        self.seq_lens = cumsum(
+            [len(i) - self.motif_width for i in self.fasta_file_seqs])
+        self.em_motifs_seq = [
+            array(self.em_motifs[pre:cur])
+            for pre, cur in self.prev_and_next(self.seq_lens)
+        ]
+        self.score = [
+            array(self.score[pre:cur])
+            for pre, cur in self.prev_and_next(self.seq_lens)
+        ]
+
+    def update_max_likely_dict(self, i):
+        self.em_motifs_merge()
+        for j, motif_set in enumerate(self.em_motifs_seq):
+            self.max_likely_dict["max_scores_matrix"][i].append(
+                max(self.score[j]))
+            self.max_likely_dict["max_posits_matrix"][i].append(
+                self.score[j].argmax())
+            self.max_likely_dict["max_motifs_matrix"][i].append(
+                ''.join(motif_set[self.score[j]
+                                  .argmax()]))  # Convert motif back to string
 
     def update_log_odds(self, updated_max_posits):  # The ML magic
         self.motif_start_posits = updated_max_posits
