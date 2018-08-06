@@ -47,8 +47,8 @@ class EM_Input:  # Commented out interactiveness
     def input_start_fasta(self):
         # input_user_fasta_path = input(
         #     "Please specify the path of the fasta file: ")
-        # input_user_fasta_path = "example.fasta"
-        self.check_if_fasta("example.fasta")
+        self.input_user_fasta_path = "example.fasta"
+        self.check_if_fasta(self.input_user_fasta_path)
 
     def check_if_int(self, int_return):
         try:

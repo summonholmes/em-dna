@@ -1,6 +1,7 @@
 from class_EM_Count import EM_Count
 from class_EM_Matrix import EM_Matrix
 from class_EM_Run import EM_Run
+from termcolor import colored
 
 
 class EM_Core:
@@ -17,7 +18,9 @@ class EM_Core:
         for i in range(  # Encompasses the rest of the program
                 self.total_rand_aligns):
             print(
-                "Progress: {:2.1%}".format((i + 1) / self.total_rand_aligns),
+                colored(
+                    "Progress: {:2.1%}".format(
+                        (i + 1) / self.total_rand_aligns), "blue"),
                 end="\r")
             self.em_counter_obj = EM_Count(self.motif_width,
                                            self.fasta_file_seqs)
@@ -28,5 +31,5 @@ class EM_Core:
             self.em_run_obj = EM_Run(self.total_em_iters, self.fasta_file_seqs,
                                      self.motif_width,
                                      self.em_matrix_obj.em_log_odds_matrix)
-            self.total_records.append(self.em_run_obj.best_results
+            self.total_records.append(self.em_run_obj.final_scores_dict
                                       )  # Record best results of each round

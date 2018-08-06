@@ -15,6 +15,7 @@ class EM_Run(EM_Matrix):  # The ML class
         self.init_max_likely_dict()
         self.em_start_scoring()
         self.em_finalize()
+        self.em_max_sum()
         self.em_best_result()
 
     def prev_and_next(self, iterable):
@@ -83,22 +84,21 @@ class EM_Run(EM_Matrix):  # The ML class
 
     def em_finalize(self):
         self.final_scores_dict = {
-            "final_score": max(self.max_likely_dict["max_scores_matrix"][-1])
+            "scores_set": self.max_likely_dict["max_scores_matrix"][-1],
+            "posits_set": self.max_likely_dict["max_posits_matrix"][-1],
+            "motifs_set": self.max_likely_dict["max_motifs_matrix"][-1]
         }  # Update by indexing with last position/last iteration
-        self.final_scores_dict["final_seq"] = self.max_likely_dict[
-            "max_scores_matrix"][-1].index(
-                self.final_scores_dict["final_score"])
-        self.final_scores_dict["final_pos"] = self.max_likely_dict[
-            "max_posits_matrix"][-1][self.final_scores_dict["final_seq"]]
-        self.final_scores_dict["final_motif"] = self.max_likely_dict[
-            "max_motifs_matrix"][-1][self.final_scores_dict["final_seq"]]
+
+    def em_max_sum(self):  # These index the best results below
+        self.final_scores_dict["final_score"] = max(
+            self.final_scores_dict["scores_set"])
         self.final_scores_dict["final_sum_scores"] = sum(
-            self.max_likely_dict["max_scores_matrix"][-1])
+            self.final_scores_dict["scores_set"])
 
     def em_best_result(self):  # Last fxn within the em_core for loop
-        for i in self.max_likely_dict.keys():
-            self.max_likely_dict[i] = self.max_likely_dict[i][-1]
-        self.best_results = {
-            "final_scores_seqs_posits_motifs": self.final_scores_dict,
-            "max_scores_posits_motifs": self.max_likely_dict
-        }
+        self.final_scores_dict["final_seq"] = self.final_scores_dict[
+            "scores_set"].index(self.final_scores_dict["final_score"])
+        self.final_scores_dict["final_pos"] = self.final_scores_dict[
+            "posits_set"][self.final_scores_dict["final_seq"]]
+        self.final_scores_dict["final_motif"] = self.final_scores_dict[
+            "motifs_set"][self.final_scores_dict["final_seq"]]
