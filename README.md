@@ -23,7 +23,6 @@ This program requires few dependences and should be trivial to set up.  However,
 
 ### Dependenciese:
 * python3  
-* python3-biopython  
 * python3-numpy
 * python3-pprint  
 * python3-termcolor
