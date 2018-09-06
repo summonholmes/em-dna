@@ -21,7 +21,7 @@ A brief description of the five classes:
 ## Getting Started
 This program requires few dependences and should be trivial to set up.  However, an in-depth understanding of the EM algorithm requires some knowledge of bioinformatics, data science, and machine learning.
 
-### Dependenciese:
+### Dependencies:
 * python3  
 * python3-numpy
 * python3-pprint  
