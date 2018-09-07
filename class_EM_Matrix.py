@@ -36,9 +36,8 @@ class EM_Matrix(EM_Count):
                 "motif_posits_%s" % base]  # By Row
 
     def freq_matrix_convert_bgs(self):
-        # Turn background to freq
-        self.em_log_odds_matrix[:, 0] = self.em_log_odds_matrix[:, 0] / sum(
-            self.em_log_odds_matrix[:, 0])
+        # Turn background to freq # By Column
+        self.em_log_odds_matrix[:, 0] /= sum(self.em_log_odds_matrix[:, 0])
 
     def freq_col_totals(self):
         # Sum columns
@@ -46,15 +45,13 @@ class EM_Matrix(EM_Count):
 
     def freq_matrix_convert_cols(self):
         # Turn columns to freq
-        for i in range(1, self.motif_width + 1):
-            self.em_log_odds_matrix[:, i] = \
-                self.em_log_odds_matrix[:, i] / self.col_totals[i]
+        for i in range(1, self.motif_width + 1):  # By Column
+            self.em_log_odds_matrix[:, i] /= self.col_totals[i]
 
     def odds_matrix_populate(self):
         # Odds of getting each base in each position
-        for i in range(4):
-            self.em_log_odds_matrix[i, 1:] = (  # By Row
-                self.em_log_odds_matrix[i, 1:] / self.em_log_odds_matrix[i][0])
+        for i in range(4):  # By Row
+            self.em_log_odds_matrix[i, 1:] /= self.em_log_odds_matrix[i][0]
 
     def odds_matrix_to_log(self):
         # Log-odds matrix is NOT offset!
