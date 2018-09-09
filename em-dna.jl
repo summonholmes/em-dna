@@ -1,4 +1,16 @@
 #=
+Starting at EM-Core for Julia:
+The primary iteration of the program.
+
+Loop over total_rand_aligns and record the best
+results each time.
+
+This is important to the EM due to the likelihood of
+local optimization.
+=#
+
+# Include all files
+#=
 All input operations are handled here.
 
 Once the parameters are set, the file is loaded
@@ -47,27 +59,17 @@ bkgd_bases['G'] = count(G, all_bases)
 
 # Get cumsum to track scores and motifs
 seq_cumsum = pushfirst!(cumsum(
-    [length(seq) - motif_width - 1 for seq in fasta_file_seqs]), 1)
+    [length(i) - motif_width for i in fasta_file_seqs]), 0)
 
 # Get all possible motifs for each sequence
 em_motifs = hcat(
-    [collect(seq[j:j + motif_width - 1]) for seq in fasta_file_seqs 
-    for j = 1:length(seq) - motif_width - 1]...)
-
-#=
-The primary iteration of the program.
-
-Loop over total_rand_aligns and record the best
-results each time.
-
-This is important to the EM due to the likelihood of
-local optimization.
-=#
+    [collect(i[j:j + motif_width - 1]) for i in fasta_file_seqs 
+    for j = 1:length(i) - motif_width]...)
 
 # Use list for final results
 final_results = []
 
-# Start the random alignment loop
+# Start the Loops
 for i = 1:total_rand_aligns
     #=
     Generate random motifs.
@@ -77,56 +79,53 @@ for i = 1:total_rand_aligns
     =#
 
     # Get random positions
-    motif_start_posits = [rand(1:length(seq) - motif_width - 1) 
-        for seq in fasta_file_seqs]
+    # motif_start_posits = [rand(1:length(seq) - motif_width - 1) 
+    #     for seq in fasta_file_seqs]
+    motif_start_posits = [3, 17, 5, 26, 17, 6, 2, 24, 21, 21, 3, 10, 8, 21, 35, 21, 15, 
+        10, 0, 27, 5, 24, 4, 0, 20, 28, 6, 28, 2].+1
 
     # Get motifs from random positions
-    current_motif_posits = [seq[pos:pos+motif_width - 1] 
+    current_motif_posits = [seq[pos:pos+motif_width-1] 
         for (seq, pos) in zip(fasta_file_seqs, motif_start_posits)]
 
-    # Start the ML loop
     for j = 1:total_em_iters
         #=
         All counting operations for the E step.
-
+        
         Take counts of bases, motif bases, and 
         positional counts.
         =#
-
-        # Get motifs from random positions
-        current_motif_posits = [seq[pos:pos+motif_width - 1] 
-            for (seq, pos) in zip(fasta_file_seqs, motif_start_posits)]
-
+        
         # Merge all motifs to a single string
         all_motif_bases = join(current_motif_posits)
- 
+        
         # Copy all bases to motif_bkgd_bases
         motif_bkgd_bases = Dict('A' => bkgd_bases['A'], 
                                 'C' => bkgd_bases['C'], 
                                 'T' => bkgd_bases['T'], 
                                 'G' => bkgd_bases['G'])
-
+        
         # Count all background bases
         motif_bkgd_bases['A'] -= count(A, all_motif_bases)
         motif_bkgd_bases['C'] -= count(C, all_motif_bases)
         motif_bkgd_bases['T'] -= count(T, all_motif_bases)
         motif_bkgd_bases['G'] -= count(G, all_motif_bases)
-
+        
         # Init positional pseudocounts
         motif_posits_freq = Dict('A' => ones(motif_width), 
                                  'C' => ones(motif_width), 
                                  'T' => ones(motif_width), 
                                  'G' => ones(motif_width))
-
+        
         # Count positional bases
         for i = 1:motif_width
-            motif_posits_freq['A'][i] = count(
+            motif_posits_freq['A'][i] += count(
                 A, all_motif_bases[i:motif_width:end])
-            motif_posits_freq['C'][i] = count(
+            motif_posits_freq['C'][i] += count(
                 C, all_motif_bases[i:motif_width:end])
-            motif_posits_freq['T'][i] = count(
+            motif_posits_freq['T'][i] += count(
                 T, all_motif_bases[i:motif_width:end])
-            motif_posits_freq['G'][i] = count(
+            motif_posits_freq['G'][i] += count(
                 G, all_motif_bases[i:motif_width:end])
         end
 
@@ -166,6 +165,7 @@ for i = 1:total_rand_aligns
         # Finish log-odds matrix by taking log2 of odds
         em_log_odds = log2.(em_log_odds[:, 2:end])
 
+
         #=
         The scoring operations for the M step.
         
@@ -197,7 +197,7 @@ for i = 1:total_rand_aligns
                                       "max_motifs" => String[])
 
         # Populate the max_likely_dict
-        for (pre, cur) in zip(seq_cumsum[1:end-1], seq_cumsum[2:end])
+        for (pre, cur) in zip(seq_cumsum[1:end-1].+1, seq_cumsum[2:end])
             max_pos = findmax(score_motifs[pre:cur])[2]
             push!(max_likely_dict["max_posits"], max_pos)
             push!(max_likely_dict["max_scores"], 
@@ -205,11 +205,14 @@ for i = 1:total_rand_aligns
             push!(max_likely_dict["max_motifs"], 
                 join(em_motifs[:, pre:cur][:, max_pos]))
         end
-        
+
         # Finally, update positions
         motif_start_posits = max_likely_dict["max_posits"]
-
+        current_motif_posits = [seq[pos:pos+motif_width-1] 
+            for (seq, pos) in zip(
+                fasta_file_seqs, motif_start_posits)]
     end
+
     # Record alignment results after ML iterations
     push!(final_results, max_likely_dict["max_posits"])
     push!(final_results, max_likely_dict["max_scores"])
@@ -219,6 +222,6 @@ end
 # Display final results
 max_sum_results = [sum(i) for i in final_results[2:3:end]]
 max_ind = findmax(max_sum_results)
-final_results[(max_ind[2] * 3) - 2]
-final_results[(max_ind[2] * 3) - 1]
-final_results[max_ind[2] * 3]
+print(final_results[(max_ind[2] * 3) - 2])
+print(final_results[(max_ind[2] * 3) - 1])
+print(final_results[max_ind[2] * 3])
