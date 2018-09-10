@@ -1,4 +1,3 @@
-
 from numpy import ones
 from random import randint, seed
 

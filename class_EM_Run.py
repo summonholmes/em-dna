@@ -1,12 +1,12 @@
 from class_EM_Matrix import EM_Matrix
-from itertools import chain, tee
 from numpy import max, power, select, sum
 
 
 class EM_Run(EM_Matrix):
     # The ML and scoring class
     def __init__(self, total_em_iters, fasta_file_seqs, motif_width,
-                 em_log_odds, seq_cumsum, contig_motifs, total_bases_counts):
+                 em_log_odds, seq_cumsum, contig_motifs, total_bases_counts,
+                 prev_and_next):
         self.total_em_iters = total_em_iters
         self.fasta_file_seqs = fasta_file_seqs
         self.motif_width = motif_width
@@ -14,15 +14,10 @@ class EM_Run(EM_Matrix):
         self.seq_cumsum = seq_cumsum
         self.contig_motifs = contig_motifs
         self.total_bases_counts = total_bases_counts
+        self.prev_and_next = prev_and_next
         self.em_iter_over_total_rounds()
         self.em_max_sum()
         self.em_best_result()
-
-    def prev_and_next(self, iterable):
-        # Stack overflow iteration technique, Thx nosklo!
-        prevs, items = tee(iterable, 2)
-        prevs = chain([None], prevs)
-        return zip(prevs, items)
 
     def em_iter_over_total_rounds(self):
         # Consolidate looping

@@ -1,3 +1,4 @@
+from itertools import chain, tee
 from numpy import array, cumsum
 
 
@@ -39,3 +40,9 @@ class EM_Prep:
             for seq in self.fasta_file_seqs
             for start in range(len(seq) - self.motif_width)
         ])
+
+    def prev_and_next(self, iterable):  # Don't run immediately
+        # Stack overflow iteration technique, Thx nosklo!
+        prevs, items = tee(iterable, 2)
+        prevs = chain([None], prevs)
+        return zip(prevs, items)

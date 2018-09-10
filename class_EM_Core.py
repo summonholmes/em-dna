@@ -56,4 +56,5 @@ class EM_Core:
         self.em_run_obj = EM_Run(
             self.total_em_iters, self.fasta_file_seqs, self.motif_width,
             self.em_matrix_obj.em_log_odds, self.em_prep.seq_cumsum,
-            self.em_prep.contig_motifs, self.em_prep.total_bases_counts)
+            self.em_prep.contig_motifs, self.em_prep.total_bases_counts,
+            self.em_prep.prev_and_next)
