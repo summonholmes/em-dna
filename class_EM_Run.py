@@ -5,8 +5,7 @@ from numpy import max, power, select, sum
 class EM_Run(EM_Matrix):
     # The ML and scoring class
     def __init__(self, total_em_iters, fasta_file_seqs, motif_width,
-                 em_log_odds, seq_cumsum, contig_motifs, total_bases_counts,
-                 prev_and_next):
+                 em_log_odds, seq_cumsum, contig_motifs, total_bases_counts):
         self.total_em_iters = total_em_iters
         self.fasta_file_seqs = fasta_file_seqs
         self.motif_width = motif_width
@@ -14,7 +13,6 @@ class EM_Run(EM_Matrix):
         self.seq_cumsum = seq_cumsum
         self.contig_motifs = contig_motifs
         self.total_bases_counts = total_bases_counts
-        self.prev_and_next = prev_and_next
         self.em_iter_over_total_rounds()
         self.em_max_sum()
         self.em_best_result()
@@ -46,7 +44,7 @@ class EM_Run(EM_Matrix):
 
     def update_max_likely_results(self):
         # Now simultaneously group scores and sequences, and append to dict
-        for pre, cur in self.prev_and_next(self.seq_cumsum):
+        for pre, cur in zip(self.seq_cumsum[:-1], self.seq_cumsum[1:]):
             max_pos = self.score[pre:cur].argmax()
             self.max_likely_results["max_posits"].append(max_pos)
             self.max_likely_results["max_scores"].append(
