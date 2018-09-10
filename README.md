@@ -7,6 +7,8 @@ Since the starting positions of the DNA motifs are always randomized, no two run
 
 The Expectation (E) step composes the majority of source code.  Total positional counts, frequencies, odds, then log-odds calculations compose the E step and derive the log-likelihood function.  The Maximization Step scores on the log-likelihood function derived from the previous Expectation Step.  Taking the score for every possible contiguous motif, for each sequence, the motif positions that generate the maximum scores on each sequence are identified, and become the input of the next E step.  The E and M steps are then repeated X number of times.  After enough iterations, convergence occurs to identify the optimal alignment positions and motifs.
 
+An implementation in Julia is also available.  The Julia implementation was constructed to test the claims regarding Julia's superior performance.  Despite being as identical to the Python code blueprint as possible (minus the object-oriented structure), the Julia code runs far slower.  Perhaps I can improve it when I learn more about Julia's best practices, or Julia isn't what it claims to be.
+
 A brief description of the five classes:
 1. EM_Input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.  This class has an interactive mode, but is commented out in favor of default parameters.  The defaults include a motif width of 6, 50 total random alignments, and 50 iterations.
 
@@ -21,7 +23,7 @@ A brief description of the five classes:
 ## Getting Started
 This program requires few dependences and should be trivial to set up.  However, an in-depth understanding of the EM algorithm requires some knowledge of bioinformatics, data science, and machine learning.
 
-### Dependenciese:
+### Dependencies:
 * python3  
 * python3-numpy
 * python3-pprint  
