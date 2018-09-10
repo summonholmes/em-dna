@@ -9,8 +9,10 @@ The Expectation (E) step composes the majority of source code.  Total positional
 
 An implementation in Julia is also available.  The Julia implementation was constructed to test the claims regarding Julia's superior performance.  Despite being as identical to the Python code blueprint as possible (minus the object-oriented structure), the Julia code runs far slower.  Perhaps I can improve it when I learn more about Julia's best practices, or Julia isn't what it claims to be.
 
-A brief description of the five classes:
+A brief description of the six classes:
 1. EM_Input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.  This class has an interactive mode, but is commented out in favor of default parameters.  The defaults include a motif width of 6, 50 total random alignments, and 50 iterations.
+
+2. EM_Prep: Consolidates all consistent and reusable information.  This includes all bases as a string, all base counts, all contiguous motifs, and cumulative sums.
 
 2. EM_Core: The first iteration or 'for' loop over the number of random alignments.  Previously, the entire program could be thought of as one gigantic, quintuple, nested 'for' loop.  However, this approach has been reduced to a double 'for' loop via numpy vectorization and indexing.  This is the 'nucleas' of the program, which encompasses the entire EM process and iterates for the specified number of total random alignments.
 

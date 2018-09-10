@@ -8,12 +8,12 @@ from termcolor import colored
 def color_the_sequences(em_core_obj, final_results):
     return map(lambda x, y: x.replace(x[y:y + em_core_obj.motif_width],
                colored(x[y:y + em_core_obj.motif_width], "red")),
-               em_core_obj.fasta_file_seqs, final_results["max_posits_matrix"])
+               em_core_obj.fasta_file_seqs, final_results["max_posits"])
 
 
 # Initialize input object
 em_input_obj = EM_Input()  # Get Input
-print("Commencing EM on", colored(em_input_obj.input_user_fasta_path,
+print("Commencing EM on", colored(em_input_obj.input_fasta_path,
                                   "magenta"))
 
 # Initialize core object
