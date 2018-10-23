@@ -1,3 +1,6 @@
+from re import sub
+
+
 class EM_Input:
     # Record user input.  Commented out interactiveness
     def __init__(self):
@@ -11,7 +14,7 @@ class EM_Input:
         self.motif_width = 6
         self.total_rand_aligns = 50
         self.total_em_iters = 50
-        self.input_fasta_path = "example.fasta"
+        self.input_fasta_path = "sonic_hedgehog.fasta"
         self.check_if_fasta()
         self.process_fasta()
 
@@ -70,5 +73,7 @@ class EM_Input:
 
     def process_fasta(self):
         # Read, split, and skip every other line
-        self.fasta_file_seqs = self.fasta_file_seqs.split("\n")
-        self.fasta_file_seqs = [seq for seq in self.fasta_file_seqs[1::2]]
+        self.fasta_file_seqs = self.fasta_file_seqs.split(">")
+        self.fasta_file_seqs = [sub(r"[^ACTG]+", "", string)
+                                for string in self.fasta_file_seqs]
+        del self.fasta_file_seqs[0]
