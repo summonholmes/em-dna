@@ -5,7 +5,7 @@ Optimal alignment positions and motifs are the latent variables requiring detect
 
 Since the starting positions of the DNA motifs are always randomized, no two runs are ever alike.  However, when provided the same input more than once, the program results are (almost) always the same.
 
-The Expectation (E) step composes the majority of source code.  Total positional counts, frequencies, odds, then log-odds calculations compose the E step and derive the log-likelihood function.  The Maximization Step scores on the log-likelihood function derived from the previous Expectation Step.  Taking the score for every possible contiguous motif, for each sequence, the motif positions that generate the maximum scores on each sequence are identified, and become the input of the next E step.  The E and M steps are then repeated X number of times.  After enough iterations, convergence occurs to identify the optimal alignment positions and motifs.
+The Expectation (E) step composes the majority of source code.  Total positional counts, frequencies, odds, then log-odds calculations compose the E step and derive the log-likelihood function.  The Maximization Step scores on the log-likelihood function derived from the previous Expectation Step.  Taking the score for every possible contiguous motif, for each sequence, the motif positions that generate the maximum scores on each sequence are identified, then become the input of the next E step.  The E and M steps are then repeated X number of times.  After enough iterations, convergence occurs to identify the optimal alignment positions and motifs. 
 
 An implementation in Julia is also available.  The Julia implementation was constructed to test the claims regarding Julia's superior performance.  Despite being as identical to the Python code blueprint as possible (minus the object-oriented structure), the Julia code runs far slower.  Perhaps I can improve it when I learn more about Julia's best practices, or Julia isn't what it claims to be.
 
@@ -28,7 +28,7 @@ This program requires few dependences and should be trivial to set up.  However,
 ### Dependencies:
 * python3  
 * python3-numpy
-* python3-pprint  
+* python3-pandas
 * python3-termcolor
 
 ### Usage:
@@ -41,101 +41,43 @@ $ python3 /path/to/main.py
 C:\path\to\main.py C:\path\to\python3.exe main.py
 ```
 ### Example Run:
-![alt text](https://raw.githubusercontent.com/summonholmes/em-dna/master/example.png)
+![alt text](https://raw.githubusercontent.com/summonholmes/em-dna/master/Images/example.png)
 ```
-Results:
-{'final_motif': 'TTATCT',
- 'final_pos': 20,
- 'final_score': 401.64821219980882,
- 'final_seq': 12,
- 'final_sum_scores': 4852.1552401637646,
- 'motifs_set': ['TTATCA',
-                'CTGACT',
-                'CTATCA',
-                'ATAACT',
-                'TTACAA',
-                'CTATCT',
-                'TTATCA',
-                'TTATCA',
-                'CTATAA',
-                'CTATCT',
-                'TGGTCA',
-                'TTGTAA',
-                'TTATCT',
-                'TTATCT',
-                'TTATCA',
-                'CTATAA',
-                'TTATCC',
-                'AGATAT',
-                'TGATAA',
-                'ATAACA',
-                'CTGTAT',
-                'CTGTAT',
-                'CTATCT',
-                'TTGTCT',
-                'TTATCT',
-                'CTATCG',
-                'TTATCA',
-                'CTATCT',
-                'TTGTCA'],
- 'posits_set': [18,
-                28,
-                15,
-                19,
-                19,
-                18,
-                20,
-                2,
-                17,
-                14,
-                21,
-                33,
-                20,
-                2,
-                10,
-                3,
-                13,
-                20,
-                16,
-                26,
-                12,
-                0,
-                23,
-                4,
-                17,
-                15,
-                19,
-                15,
-                2],
- 'scores_set': [349.55201551685258,
-                11.048262627379067,
-                208.43428487091478,
-                10.19243588705069,
-                8.934927563323658,
-                239.49871310500956,
-                349.55201551685258,
-                349.55201551685258,
-                87.115543742405634,
-                239.49871310500956,
-                16.479781956304635,
-                53.931154636101589,
-                401.64821219980882,
-                401.64821219980882,
-                349.55201551685258,
-                87.115543742405634,
-                45.618802496192338,
-                4.3536481630627533,
-                18.658492127411794,
-                8.8704154509530913,
-                36.951416551025055,
-                36.951416551025055,
-                239.49871310500956,
-                148.26793906959458,
-                401.64821219980882,
-                29.494915407020887,
-                349.55201551685258,
-                239.49871310500956,
-                129.03669271786535]}
+    Final Scores  Final Positions Final Motifs
+0     303.827137               18       TTATCA
+1       4.534022               28       CTGACT
+2     230.734903               15       CTATCA
+3      15.733361               19       ATAACT
+4       4.545193               19       TTACAA
+5     263.652353               18       CTATCT
+6     303.827137               20       TTATCA
+7     303.827137                2       TTATCA
+8      33.331416               17       CTATAA
+9     263.652353               14       CTATCT
+10     20.255142               31       ATTTCA
+11     20.255142               13       ATTTCA
+12    347.172181               20       TTATCT
+13    347.172181                2       TTATCT
+14    303.827137               10       TTATCA
+15     51.522972               25       GTATCC
+16    143.810374               13       TTATCC
+17      1.287469               18       GTAGAT
+18      5.407760               29       CTTCCT
+19     13.769024               26       ATAACA
+20     51.522972               14       GTATCC
+21     51.522972                2       GTATCC
+22    263.652353               23       CTATCT
+23    109.213657               26       CTATCC
+24    347.172181               17       TTATCT
+25     37.783513               15       CTATCG
+26    303.827137               19       TTATCA
+27    263.652353               15       CTATCT
+28     38.807012                2       TTGTCA
+('Final Max Score', 347.1721810115789)
+('Final Sum Scores', 4449.298542515307)
+('Final Sequence', 12)
+('Final Position', 20)
+('Final Motif', 'TTATCT')
 ```
 
 ## License

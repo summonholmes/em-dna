@@ -28,9 +28,9 @@ class EM_Run(EM_Matrix):
     def init_max_likely_results(self):
         # Preallocate or empty existing
         self.max_likely_results = {
-            "max_posits": [],
-            "max_scores": [],
-            "max_motifs": []
+            "Final Positions": [],
+            "Final Scores": [],
+            "Final Motifs": []
         }
 
     def em_score(self):
@@ -46,15 +46,15 @@ class EM_Run(EM_Matrix):
         # Now simultaneously group scores and sequences, and append to dict
         for pre, cur in zip(self.seq_cumsum[:-1], self.seq_cumsum[1:]):
             max_pos = self.score[pre:cur].argmax()
-            self.max_likely_results["max_posits"].append(max_pos)
-            self.max_likely_results["max_scores"].append(
+            self.max_likely_results["Final Positions"].append(max_pos)
+            self.max_likely_results["Final Scores"].append(
                 self.score[pre:cur][max_pos])
-            self.max_likely_results["max_motifs"].append(''.join(
+            self.max_likely_results["Final Motifs"].append(''.join(
                 self.contig_motifs[pre:cur][max_pos]))
 
     def update_log_odds(self):
         # The ML magic
-        self.motif_start_posits = self.max_likely_results["max_posits"]
+        self.motif_start_posits = self.max_likely_results["Final Positions"]
         self.init_em_motifs()
         self.merge_all_motif_bases()
         self.init_bkgd_counts()
@@ -72,16 +72,16 @@ class EM_Run(EM_Matrix):
 
     def em_max_sum(self):
         # These index the best results below
-        self.max_likely_results["final_score"] = max(
-            self.max_likely_results["max_scores"])
-        self.max_likely_results["final_sum_scores"] = sum(
-            self.max_likely_results["max_scores"])
+        self.max_likely_results["Final Max Score"] = max(
+            self.max_likely_results["Final Scores"])
+        self.max_likely_results["Final Sum Scores"] = sum(
+            self.max_likely_results["Final Scores"])
 
     def em_best_result(self):
         # Last fxn within the em_core for loop
-        self.max_likely_results["final_seq"] = self.max_likely_results[
-            "max_scores"].index(self.max_likely_results["final_score"])
-        self.max_likely_results["final_pos"] = self.max_likely_results[
-            "max_posits"][self.max_likely_results["final_seq"]]
-        self.max_likely_results["final_motif"] = self.max_likely_results[
-            "max_motifs"][self.max_likely_results["final_seq"]]
+        self.max_likely_results["Final Sequence"] = self.max_likely_results[
+            "Final Scores"].index(self.max_likely_results["Final Max Score"])
+        self.max_likely_results["Final Position"] = self.max_likely_results[
+            "Final Positions"][self.max_likely_results["Final Sequence"]]
+        self.max_likely_results["Final Motif"] = self.max_likely_results[
+            "Final Motifs"][self.max_likely_results["Final Sequence"]]

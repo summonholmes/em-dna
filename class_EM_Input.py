@@ -14,7 +14,7 @@ class EM_Input:
         self.motif_width = 6
         self.total_rand_aligns = 50
         self.total_em_iters = 50
-        self.input_fasta_path = "sonic_hedgehog.fasta"
+        self.input_fasta_path = "FASTA/example.fasta"
         self.check_if_fasta()
         self.process_fasta()
 

@@ -1,20 +1,30 @@
+from class_EM_Input import EM_Input
 from class_EM_Prep import EM_Prep
 from class_EM_Count import EM_Count
 from class_EM_Matrix import EM_Matrix
 from class_EM_Run import EM_Run
+from pandas import DataFrame
 from termcolor import colored
 
 
 class EM_Core:
     # Runs and contains all EM rounds
-    def __init__(self, motif_width, total_rand_aligns, total_em_iters,
-                 fasta_file_seqs):
-        self.motif_width = motif_width
-        self.total_rand_aligns = total_rand_aligns
-        self.total_em_iters = total_em_iters
-        self.fasta_file_seqs = fasta_file_seqs
-        self.em_prep = EM_Prep(fasta_file_seqs, motif_width)
+    def __init__(self):
+        # Initialize input object
+        em_input_obj = EM_Input()
+
+        # Get params
+        self.motif_width = em_input_obj.motif_width
+        self.total_rand_aligns = em_input_obj.total_rand_aligns
+        self.total_em_iters = em_input_obj.total_em_iters
+        self.fasta_file_seqs = em_input_obj.fasta_file_seqs
+        self.em_prep = EM_Prep(self.fasta_file_seqs, self.motif_width)
+
+        # Init process
         self.init_em()
+        self.finalize_max_results()
+        self.gen_dataframe()
+        self.clean_final_dict()
 
     def init_em(self):
         # Get all results in a list comprehension
@@ -57,3 +67,33 @@ class EM_Core:
             self.total_em_iters, self.fasta_file_seqs, self.motif_width,
             self.em_matrix_obj.em_log_odds, self.em_prep.seq_cumsum,
             self.em_prep.contig_motifs, self.em_prep.total_bases_counts)
+
+    def finalize_max_results(self):
+        self.final_results = max(
+            self.total_records, key=lambda x: x["Final Sum Scores"])
+
+    def color_the_sequences(self):
+        # Map the colors
+        return map(lambda x, y: x.replace(x[y:y + self.motif_width],
+                   colored(x[y:y + self.motif_width], "red")),
+                   self.fasta_file_seqs,
+                   self.final_dataframe["Final Positions"])
+
+    def gen_dataframe(self):
+        self.final_dataframe = DataFrame({
+            key: self.final_results[key]
+            for key in ("Final Scores", "Final Positions", "Final Motifs")
+        })
+
+    def clean_final_dict(self):
+        del self.final_results["Final Positions"]
+        del self.final_results["Final Scores"]
+        del self.final_results["Final Motifs"]
+
+    def display_results(self):
+        # Print final results
+        print(colored("\n\nInput:", "green"))
+        print(*self.color_the_sequences(), sep="\n")
+        print(colored("\nResults:", "green"))
+        print(self.final_dataframe)
+        print(*self.final_results.items(), sep="\n")
