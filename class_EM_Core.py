@@ -50,7 +50,7 @@ class EM_Core:
             colored(
                 "Progress: {:2.1%}".format((i + 1) / self.total_rand_aligns),
                 "blue"),
-            end="\r")
+            end='\r')
 
     def process_counter_obj(self):
         # Step 1 - inherit Core
@@ -77,10 +77,14 @@ class EM_Core:
     def color_the_sequences(self):
         # Map the colors
         return map(
-            lambda x, y: x[:y] +
-            colored(x[y:y + self.motif_width], "red") +
-            x[y + 1:],
-            self.fasta_file_seqs, self.final_dataframe["Final Positions"])
+            lambda seq, pos, align:
+                ' ' * align + seq[:pos] +
+                colored(seq[pos:pos + self.motif_width], "red") +
+                seq[pos + 1:],
+                self.fasta_file_seqs,
+                self.final_dataframe["Final Positions"],
+                self.final_dataframe["Final Positions"].max(
+                ) - self.final_dataframe["Final Positions"])
 
     def gen_dataframe(self):
         filter_keys = ("Final Scores", "Final Positions", "Final Motifs")
@@ -96,7 +100,7 @@ class EM_Core:
     def display_results(self):
         # Print final results
         print(colored("\n\nInput:", "green"))
-        print(*self.color_the_sequences(), sep="\n")
+        print(*self.color_the_sequences(), sep='\n')
         print(colored("\nResults:", "green"))
         print(self.final_dataframe)
-        print(*self.final_results.items(), sep="\n")
+        print(*self.final_results.items(), sep='\n')

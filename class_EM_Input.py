@@ -73,8 +73,8 @@ class EM_Input:
 
     def process_fasta(self):
         # Read, split, and skip every other line
-        self.fasta_file_seqs = self.fasta_file_seqs.split(">")
+        self.fasta_file_seqs = self.fasta_file_seqs.split('>')
         self.fasta_file_seqs = [
-            sub(r"[^ACTG]+", "", string) for string in self.fasta_file_seqs
+            sub(r"[^ACTG]+", '', string) for string in self.fasta_file_seqs
         ]
         del self.fasta_file_seqs[0]
