@@ -76,16 +76,17 @@ class EM_Core:
 
     def color_the_sequences(self):
         # Map the colors
-        return map(lambda x, y: x.replace(x[y:y + self.motif_width],
-                   colored(x[y:y + self.motif_width], "red")),
-                   self.fasta_file_seqs,
-                   self.final_dataframe["Final Positions"])
+        return map(
+            lambda x, y: x[:y] +
+            colored(x[y:y + self.motif_width], "red") +
+            x[y + 1:],
+            self.fasta_file_seqs, self.final_dataframe["Final Positions"])
 
     def gen_dataframe(self):
-        self.final_dataframe = DataFrame({
-            key: self.final_results[key]
-            for key in ("Final Scores", "Final Positions", "Final Motifs")
-        })
+        filter_keys = ("Final Scores", "Final Positions", "Final Motifs")
+        self.final_dataframe = DataFrame(
+            {key: self.final_results[key]
+             for key in filter_keys})
 
     def clean_final_dict(self):
         del self.final_results["Final Positions"]
