@@ -43,41 +43,42 @@ C:\path\to\main.py C:\path\to\python3.exe main.py
 ### Example Run:
 ![alt text](https://raw.githubusercontent.com/summonholmes/em-dna/master/Images/example.png)
 ```
+Results:
     Final Scores  Final Positions Final Motifs
-0     303.827137               18       TTATCA
-1       4.534022               28       CTGACT
-2     230.734903               15       CTATCA
-3      15.733361               19       ATAACT
-4       4.545193               19       TTACAA
-5     263.652353               18       CTATCT
-6     303.827137               20       TTATCA
-7     303.827137                2       TTATCA
-8      33.331416               17       CTATAA
-9     263.652353               14       CTATCT
-10     20.255142               31       ATTTCA
-11     20.255142               13       ATTTCA
-12    347.172181               20       TTATCT
-13    347.172181                2       TTATCT
-14    303.827137               10       TTATCA
-15     51.522972               25       GTATCC
-16    143.810374               13       TTATCC
-17      1.287469               18       GTAGAT
-18      5.407760               29       CTTCCT
-19     13.769024               26       ATAACA
-20     51.522972               14       GTATCC
-21     51.522972                2       GTATCC
-22    263.652353               23       CTATCT
-23    109.213657               26       CTATCC
-24    347.172181               17       TTATCT
-25     37.783513               15       CTATCG
-26    303.827137               19       TTATCA
-27    263.652353               15       CTATCT
-28     38.807012                2       TTGTCA
-('Final Max Score', 347.1721810115789)
-('Final Sum Scores', 4449.298542515307)
-('Final Sequence', 12)
-('Final Position', 20)
-('Final Motif', 'TTATCT')
+0     332.361754               18       TTATCA
+1       8.127632               28       CTGACT
+2     201.368643               15       CTATCA
+3      48.186389               19       ATAACT
+4      10.038831               18       ATTACA
+5     194.449368               18       CTATCT
+6     332.361754               20       TTATCA
+7     332.361754                2       TTATCA
+8      23.828434               17       CTATAA
+9     199.417052               28       ATATCT
+10     41.545219               31       ATTTCA
+11     41.545219               13       ATTTCA
+12    320.941394               20       TTATCT
+13    320.941394                2       TTATCT
+14    332.361754               10       TTATCA
+15     23.828434                3       CTATAA
+16     86.421941               13       TTATCC
+17      5.917996               14       ATAAGT
+18      6.128582               18       ATAAGA
+19     49.901051               26       ATAACA
+20     18.577444               14       GTATCC
+21     18.577444                2       GTATCC
+22    194.449368               23       CTATCT
+23     55.516377                4       TTGTCT
+24    320.941394               17       TTATCT
+25     27.866166               15       CTATCG
+26    332.361754               19       TTATCA
+27    194.449368               15       CTATCT
+28     57.491869                2       TTGTCA
+('Max Final Score', 332.361753824872)
+('Max Sum Scores', 4132.265778452997)
+('Max Final Sequence', 0)
+('Max Final Position', 18)
+('Max Final Motif', 'TTATCA')
 ```
 
 ## License

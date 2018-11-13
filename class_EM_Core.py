@@ -11,13 +11,15 @@ class EM_Core:
     # Runs and contains all EM rounds
     def __init__(self):
         # Initialize input object
-        em_input_obj = EM_Input()
+        em_input = EM_Input()
+        print("Commencing EM on", colored(em_input.input_fasta_path,
+                                          "magenta"))
 
         # Get params
-        self.motif_width = em_input_obj.motif_width
-        self.total_rand_aligns = em_input_obj.total_rand_aligns
-        self.total_em_iters = em_input_obj.total_em_iters
-        self.fasta_file_seqs = em_input_obj.fasta_file_seqs
+        self.motif_width = em_input.motif_width
+        self.total_rand_aligns = em_input.total_rand_aligns
+        self.total_em_iters = em_input.total_em_iters
+        self.fasta_file_seqs = em_input.fasta_file_seqs
         self.em_prep = EM_Prep(self.fasta_file_seqs, self.motif_width)
 
         # Init process
@@ -70,7 +72,7 @@ class EM_Core:
 
     def finalize_max_results(self):
         self.final_results = max(
-            self.total_records, key=lambda x: x["Final Sum Scores"])
+            self.total_records, key=lambda x: x["Max Sum Scores"])
 
     def color_the_sequences(self):
         # Map the colors
