@@ -99,7 +99,7 @@ class EM_Core:
 
     def display_results(self):
         # Print final results
-        print(colored("\n\nInput:", "green"))
+        print(colored("\n\nAlignment:", "green"))
         print(*self.color_the_sequences(), sep='\n')
         print(colored("\nResults:", "green"))
         print(self.final_dataframe)

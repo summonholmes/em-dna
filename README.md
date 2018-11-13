@@ -42,44 +42,7 @@ C:\path\to\main.py C:\path\to\python3.exe main.py
 ```
 ### Example Run:
 ![alt text](https://raw.githubusercontent.com/summonholmes/em-dna/master/Images/example.png)
-```
-Results:
-    Final Scores  Final Positions Final Motifs
-0     285.682305               18       TTATCA
-1      17.627782               28       CTGACT
-2     227.938010               15       CTATCA
-3      42.419494               19       ATAACT
-4       8.263538               18       ATTACA
-5     260.018174               18       CTATCT
-6     285.682305               20       TTATCA
-7     285.682305                2       TTATCA
-8      48.695847               17       CTATAA
-9     260.018174               14       CTATCT
-10     34.628158               31       ATTTCA
-11     34.628158               13       ATTTCA
-12    325.889445               20       TTATCT
-13    325.889445                2       TTATCT
-14    285.682305               10       TTATCA
-15     48.695847                3       CTATAA
-16     37.145453               13       TTATCC
-17      5.663967               14       ATAAGT
-18      4.965165               18       ATAAGA
-19     37.185920               26       ATAACA
-20     15.781062               12       CTGTAT
-21     15.781062                0       CTGTAT
-22    260.018174               23       CTATCT
-23     92.582229                4       TTGTCT
-24    325.889445               17       TTATCT
-25     31.658057               15       CTATCG
-26    285.682305               19       TTATCA
-27    260.018174               15       CTATCT
-28     81.159746                2       TTGTCA
-('Max Final Score', 325.8894445319883)
-('Max Sum Scores', 4230.972049319187)
-('Max Final Sequence', 12)
-('Max Final Position', 20)
-('Max Final Motif', 'TTATCT')
-```
+![alt text](https://raw.githubusercontent.com/summonholmes/em-dna/master/Images/example_2.png)
 
 ## License
 This project is licensed under the [GNU General Public License GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html).
