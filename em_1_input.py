@@ -1,22 +1,12 @@
 from re import sub
 
 
-class EM_Input:
+def em_input(self):
     # Record user input.  Commented out interactiveness
-    def __init__(self):
-        # __init__ always runs everything in the class
-        # self.input_start_motif_width()
-        # self.input_start_align()
-        # self.input_start_iter()
-        # self.input_start_fasta()
-        # self.check_if_fasta()
-        # self.process_fasta()
-        self.motif_width = 6
-        self.total_rand_aligns = 50
-        self.total_em_iters = 50
-        self.input_fasta_path = "FASTA/example.fasta"
-        self.check_if_fasta()
-        self.process_fasta()
+    self.motif_width = 6
+    self.total_rand_aligns = 50
+    self.total_em_iters = 50
+    self.input_fasta_path = "FASTA/example.fasta"
 
     # def input_start_motif_width(self):
     #     # Motif width for rest of program
@@ -78,3 +68,10 @@ class EM_Input:
             sub(r"[^ACTG]+", '', string) for string in self.fasta_file_seqs
         ]
         del self.fasta_file_seqs[0]
+
+    # input_start_motif_width(self)
+    # input_start_align(self)
+    # input_start_iter(self)
+    # input_start_fasta(self)
+    check_if_fasta(self)
+    process_fasta(self)

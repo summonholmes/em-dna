@@ -1,23 +1,8 @@
-from class_EM_Count import EM_Count
 from numpy import empty, fromiter, log2, sum
 
 
-class EM_Matrix(EM_Count):
-    # Matrix operations class
-    def __init__(self, motif_width, fasta_file_seqs, total_bkgd_counts,
-                 motif_posits_freqs):
-        self.motif_width = motif_width
-        self.fasta_file_seqs = fasta_file_seqs
-        self.total_bkgd_counts = total_bkgd_counts
-        self.motif_posits_freqs = motif_posits_freqs
-        self.init_em_matrix()
-        self.counts_matrix_convert_bkgds()
-        self.counts_matrix_populate()
-        self.freq_matrix_convert_bkgds()
-        self.freq_col_totals()
-        self.freq_matrix_convert_cols()
-        self.odds_matrix_populate()
-        self.odds_matrix_to_log()
+def em_matrix(self):
+    # Matrix operations
 
     def init_em_matrix(self):
         # Counts, freq, odds, then log odds
@@ -55,3 +40,12 @@ class EM_Matrix(EM_Count):
     def odds_matrix_to_log(self):
         # Log-odds matrix is NOT offset!
         self.em_log_odds = log2(self.em_log_odds[:, 1:])
+
+    init_em_matrix(self)
+    counts_matrix_convert_bkgds(self)
+    counts_matrix_populate(self)
+    freq_matrix_convert_bkgds(self)
+    freq_col_totals(self)
+    freq_matrix_convert_cols(self)
+    odds_matrix_populate(self)
+    odds_matrix_to_log(self)

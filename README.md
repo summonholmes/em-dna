@@ -9,18 +9,24 @@ The Expectation (E) step composes the majority of source code.  Total positional
 
 An implementation in Julia is also available.  The Julia implementation was constructed to test the claims regarding Julia's superior performance.  Despite being as identical to the Python code blueprint as possible (minus the object-oriented structure), the Julia code runs far slower.  Perhaps I can improve it when I learn more about Julia's best practices, or Julia isn't what it claims to be.
 
-A brief description of the six classes:
-1. EM_Input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.  This class has an interactive mode, but this is commented out in favor of default parameters.  The defaults include a motif width of 6, 50 total random alignments, and 50 iterations.
+A brief description of the different files:
+* class_EM_DNA: The object utilized to hold variables and methods for the entire process.
 
-2. EM_Prep: Consolidates all consistent and reusable information.  This includes all bases as a string, all base counts, all contiguous motifs, and cumulative sums.
+1. em_input: Loads all user data including the number of random alignments, the number of iterations, and the FASTA file.  This function has an interactive mode, but this is commented out in favor of default parameters.  The defaults include a motif width of 6, 50 total random alignments, and 50 iterations.
 
-2. EM_Core: The first iteration or 'for' loop over the number of random alignments.  Previously, the entire program could be thought of as one gigantic, quintuple, nested 'for' loop.  However, this approach has been reduced to a double 'for' loop via NumPy vectorization and indexing.  This is the 'nucleus' of the program, which encompasses the entire EM process and iterates for the specified number of total random alignments.
+2. em_prep: Consolidates all consistent and reusable information.  This includes all bases as a string, all base counts, all contiguous motifs, and cumulative sums.
 
-3. EM_Count: Performs all counting operations regarding bases, motifs, and normalization.  The only area where looping occurs is over the motif width when storing positional counts.  The rest of this class aims to be as Pythonic and vectorized as possible.
+3. em_process: The first iteration or 'for' loop over the number of random alignments.  Previously, the entire program could be thought of as one gigantic, quintuple, nested 'for' loop.  However, this approach has been reduced to a double 'for' loop via NumPy vectorization and indexing.  This is the 'nucleus' of the program, which encompasses the entire EM process and iterates for the specified number of total random alignments.
 
-4. EM_Matrix: Consists of the E step and generates the log odds matrix for the M step.  NumPy matrices are preferred here for their vector capabilities.  Child of EM_Count.
+4. em_count: Performs all counting operations regarding bases, motifs, and normalization.  The only area where looping occurs is over the motif width when storing positional counts.  The rest of this function aims to be as Pythonic and vectorized as possible.
 
-5. EM_Run: Consists of remaining inner two 'for' loops from mentioned above in EM_Core, and the M step.  Scores are calculated using a NumPy character array for each motif and the log odds matrix.  The entire process repeats to convergence, and the final results are printed in 'main.py'.  Note that the function 'update_log_odds' is the entire Expectation Step and recycles all functions from EM_Count & EM_Matrix.  Child of EM_Matrix.
+5. em_matrix: Consists of the E step and generates the log odds matrix for the M step.  NumPy matrices are preferred here for their vector capabilities.
+
+6. em_run: Consists of the remaining 'for' loop mentioned above in em_process, and the M step.  The entire process repeats to convergence, and the final results are printed in 'main.py'.  Note that the function 'update_log_odds' is the entire Expectation Step and recycles all functions from em_count & em_matrix.  The best results for the iteration are then recorded.
+
+7. em_score: Scores are calculated using a NumPy character array for each motif and the log odds matrix.  This is performed for each iteration in em_run.
+
+8. em_finalize: Aligned DNA sequences, the scoring results for the aligned sequences, and the maximum statistics are displayed.
 
 ## Getting Started
 This program requires few dependences and should be trivial to set up.  However, an in-depth understanding of the EM algorithm requires some knowledge of bioinformatics, data science, and machine learning.

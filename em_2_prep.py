@@ -1,16 +1,8 @@
 from numpy import array, cumsum
 
 
-class EM_Prep:
+def em_prep(self):
     # Consolidate all consistent and reusable information
-    def __init__(self, fasta_file_seqs, motif_width):
-        self.fasta_file_seqs = fasta_file_seqs
-        self.motif_width = motif_width
-        self.merge_all_bases()
-        self.init_total_bases_dict()
-        self.count_all_bases()
-        self.init_seq_cumsum()
-        self.init_contig_motifs()
 
     def merge_all_bases(self):
         # Merge all bases to one string
@@ -42,3 +34,9 @@ class EM_Prep:
             for seq in self.fasta_file_seqs
             for start in range(len(seq) - self.motif_width)
         ])
+
+    merge_all_bases(self)
+    init_total_bases_dict(self)
+    count_all_bases(self)
+    init_seq_cumsum(self)
+    init_contig_motifs(self)
