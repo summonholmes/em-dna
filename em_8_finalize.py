@@ -16,10 +16,10 @@ def em_finalize(self):
                 ) - self.final_dataframe["Final Positions"])
 
     def gen_dataframe(self):
-        filter_keys = ("Final Scores", "Final Positions", "Final Motifs")
-        self.final_dataframe = DataFrame(
-            {key: self.final_results[key]
-             for key in filter_keys})
+        self.final_dataframe = DataFrame({
+            key: self.final_results[key]
+            for key in ("Final Scores", "Final Positions", "Final Motifs")
+        })
 
     def clean_final_dict(self):
         del self.final_results["Final Positions"]

@@ -4,14 +4,6 @@ from numpy import power, select
 
 
 def em_score(self):
-    def init_max_likely_results(self):
-        # Preallocate or empty existing
-        self.max_likely_results = {
-            "Final Positions": [],
-            "Final Scores": [],
-            "Final Motifs": []
-        }
-
     def em_score(self):
         # Vectorized numpy select replaces for/if/else
         self.score = power(
@@ -23,26 +15,42 @@ def em_score(self):
 
     def update_max_likely_results(self):
         # Now simultaneously group scores and sequences, and append to dict
-        for pre, cur in zip(self.seq_cumsum[:-1], self.seq_cumsum[1:]):
-            max_pos = self.score[pre:cur].argmax()
-            self.max_likely_results["Final Positions"].append(max_pos)
-            self.max_likely_results["Final Scores"].append(
-                self.score[pre:cur][max_pos])
-            self.max_likely_results["Final Motifs"].append(''.join(
-                self.contig_motifs[pre:cur][max_pos]))
+        self.max_likely_posits = [
+            self.score[pre:cur].argmax()
+            for pre, cur in zip(self.seq_cumsum[:-1], self.seq_cumsum[1:])
+        ]
 
     def update_log_odds(self):
         # The ML magic
-        self.motif_start_posits = self.max_likely_results["Final Positions"]
+        self.motif_start_posits = self.max_likely_posits
         em_count(self)
         em_matrix(self)
 
     def em_iter_over_total_rounds(self):
         # Consolidate looping
         for i in range(self.total_em_iters):
-            init_max_likely_results(self)
             em_score(self)
             update_max_likely_results(self)
             update_log_odds(self)
 
+    def init_max_likely_results(self):
+        # Allocate for final results
+        self.max_likely_results = {
+            "Final Positions": [],
+            "Final Scores": [],
+            "Final Motifs": []
+        }
+
+    def record_iter_results(self):
+        # Only record everything when finished with the ML iters
+        for pre, cur, pos in zip(self.seq_cumsum[:-1], self.seq_cumsum[1:],
+                                 self.max_likely_posits):
+            self.max_likely_results["Final Positions"].append(pos)
+            self.max_likely_results["Final Scores"].append(
+                self.score[pre:cur][pos])
+            self.max_likely_results["Final Motifs"].append(''.join(
+                self.contig_motifs[pre:cur][pos]))
+
     em_iter_over_total_rounds(self)
+    init_max_likely_results(self)
+    record_iter_results(self)
