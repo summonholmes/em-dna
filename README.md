@@ -32,16 +32,23 @@ A brief description of the different files:
 This program requires few dependences and should be trivial to set up.  However, an in-depth understanding of the EM algorithm requires some knowledge of bioinformatics, data science, and machine learning.
 
 ### Dependencies:
-* python3  
+* python3 (Python 3.6-3.11)
 * numpy
 * pandas
 * termcolor
 * colorama
 
+### Quick Setup
+```
+$ virtualenv venv
+$ source venv/bin/activate
+$ pip install numpy pandas termcolor colorama
+```
+
 ### Usage:
 #### Mac/Linux/Unix
 ```
-$ python3 /path/to/main.py
+$ python /path/to/main.py
 ```
 #### Windows (Remember to update your PATH)
 ```
@@ -55,4 +62,4 @@ python3.exe C:\path\to\main.py
 This project is licensed under the [GNU General Public License GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
 # Questions?
-**Shane Kimble** - shanekimble12@hotmail.com - [summonholmes](https://github.com/summonholmes)
+**Shane Kimble** - summonholmes@protonmail.com - [summonholmes](https://github.com/summonholmes)
